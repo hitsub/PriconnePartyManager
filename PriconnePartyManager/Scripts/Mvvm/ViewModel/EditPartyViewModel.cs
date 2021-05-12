@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Windows;
@@ -28,6 +29,10 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         
         public ReactiveProperty<Visibility> IsVisibleSelected { get; } = new ReactiveProperty<Visibility>(Visibility.Collapsed);
         
+        public ReactiveProperty<string> SearchText { get; } = new ReactiveProperty<string>(string.Empty);
+        
+        public ReactiveCommand OnSearchTextChanged { get; set; } = new ReactiveCommand();
+        
         public ReactiveCommand OnSubmit { get; } = new ReactiveCommand();
         public ReactiveCommand OnCancel { get; } = new ReactiveCommand();
 
@@ -35,6 +40,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         private readonly ObservableCollection<Unit> m_UnitsCollection;
         private readonly ObservableCollection<UserUnit> m_PartyUnitsCollection;
         private List<UserUnit> m_PartUnits = new List<UserUnit>();
+        private ListUnitType m_CurrentUnitType = ListUnitType.All;
 
         public EditPartyViewModel(Unit[] units)
         {
@@ -47,6 +53,8 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             OnCancel.Subscribe(x => CloseWindow((Window)x));
             OnSubmit.Subscribe(SaveParty);
             
+            OnSearchTextChanged.Subscribe(() => { SearchUnit(SearchText.Value); });
+
             ShowUnitType.Subscribe(OnChangeShowUnitType);
             OnChangeSelected.Subscribe(OnChangeSelectedUnit);
             SetUnitsList(m_Units);
@@ -102,22 +110,35 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         /// </summary>
         private void OnChangeShowUnitType(ListUnitType type)
         {
-            switch (type)
+            m_CurrentUnitType = type;
+            
+            foreach (var unit in UnitList)
             {
-                case ListUnitType.Front:
-                case ListUnitType.Middle:
-                case ListUnitType.Back:
-                    foreach (var unit in UnitList)
-                    {
-                        unit.IsVisibility.Value = (int) unit.Unit.Type == (int) type ? Visibility.Visible : Visibility.Collapsed;
-                    }
-                    break;
-                default:
-                    foreach (var unit in UnitList)
-                    {
-                        unit.IsVisibility.Value = Visibility.Visible;
-                    }
-                    break;
+                var isShowUnitType = (int) unit.Unit.Type == (int) m_CurrentUnitType || m_CurrentUnitType == ListUnitType.All;
+                if (isShowUnitType && unit.Unit.Name.Contains(SearchText.Value))
+                {
+                    unit.IsVisibility.Value = Visibility.Visible;
+                }
+                else
+                {
+                    unit.IsVisibility.Value = Visibility.Collapsed;
+                }
+            }
+        }
+
+        private void SearchUnit(string name)
+        {
+            foreach (var unit in UnitList)
+            {
+                var isShowUnitType = (int) unit.Unit.Type == (int) m_CurrentUnitType || m_CurrentUnitType == ListUnitType.All;
+                if (isShowUnitType && unit.Unit.Name.Contains(name))
+                {
+                    unit.IsVisibility.Value = Visibility.Visible;
+                }
+                else
+                {
+                    unit.IsVisibility.Value = Visibility.Collapsed;
+                }
             }
         }
 
