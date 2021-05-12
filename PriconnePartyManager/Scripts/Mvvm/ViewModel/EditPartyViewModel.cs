@@ -47,7 +47,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             
             ShowUnitType.Subscribe(OnChangeShowUnitType);
             OnChangeSelected.Subscribe(OnChangeSelectedUnit);
-            OnChangeShowUnitType(ShowUnitType.Value);
+            SetUnitsList(m_Units);
         }
 
         /// <summary>
@@ -106,11 +106,14 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                 case ListUnitType.Back:
                     foreach (var unit in UnitList)
                     {
-                        unit.IsVisibility.Value = (int) unit.Unit.Type == (int) type;
+                        unit.IsVisibility.Value = (int) unit.Unit.Type == (int) type ? Visibility.Visible : Visibility.Collapsed;
                     }
                     break;
                 default:
-                    SetUnitsList(m_Units);
+                    foreach (var unit in UnitList)
+                    {
+                        unit.IsVisibility.Value = Visibility.Visible;
+                    }
                     break;
             }
         }

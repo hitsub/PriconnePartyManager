@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using PriconnePartyManager.Scripts.DataModel;
 using PriconnePartyManager.Scripts.Enum;
@@ -17,7 +18,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         
         public ReactiveProperty<bool> IsSelect { get; set; }
         
-        public ReactiveProperty<bool> IsVisibility { get; set; }
+        public ReactiveProperty<Visibility> IsVisibility { get; set; }
         
         public UnitViewModel(Unit unit)
         {
@@ -25,7 +26,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             Name = new ReactiveProperty<string>(Unit.Name);
             Icon = new ReactiveProperty<BitmapImage>(Unit.Icon);
             IsSelect = new ReactiveProperty<bool>(false);
-            IsVisibility = new ReactiveProperty<bool>(true);
+            IsVisibility = new ReactiveProperty<Visibility>(Visibility.Visible);
 
             Name.AddTo(m_Disposables);
             Icon.AddTo(m_Disposables);

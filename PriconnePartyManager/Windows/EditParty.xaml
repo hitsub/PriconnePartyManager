@@ -17,17 +17,15 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="145"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Grid.Column="0">
-            <!-- 保留
             <StackPanel Orientation="Horizontal">
                 <RadioButton GroupName="UnitType" Content="全て" IsChecked="{Binding ShowUnitType.Value, ConverterParameter=All, Converter={StaticResource EnumConverter}}"/>
                 <RadioButton GroupName="UnitType" Content="前衛" IsChecked="{Binding ShowUnitType.Value, ConverterParameter=Front, Converter={StaticResource EnumConverter}}"/>
                 <RadioButton GroupName="UnitType" Content="中衛" IsChecked="{Binding ShowUnitType.Value, ConverterParameter=Middle, Converter={StaticResource EnumConverter}}"/>
                 <RadioButton GroupName="UnitType" Content="後衛" IsChecked="{Binding ShowUnitType.Value, ConverterParameter=Back, Converter={StaticResource EnumConverter}}"/>
             </StackPanel>
-            -->
             <!-- ユニット一覧 -->
             <xaml:MultiSelectListBox
                 Grid.Row="0" 
@@ -36,7 +34,7 @@
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                 SelectedItems="{Binding SelectedUnit.Value}"
                 SelectionMode="Multiple"
-                Margin="0,0,0,0"
+                Margin="0,20,0,0"
             >
                 <b:Interaction.Behaviors>
                     <xaml:LimitSelectionBehavior Limit="5" />
