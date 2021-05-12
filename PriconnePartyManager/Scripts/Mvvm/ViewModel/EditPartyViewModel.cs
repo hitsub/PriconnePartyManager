@@ -17,7 +17,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
     {
         public ReadOnlyReactiveCollection<UnitViewModel> UnitList { get; private set; }
 
-        public ReactiveProperty<IList> SelectedUnit { get; set; } = new ReactiveProperty<IList>();
+        public ReactiveProperty<IList> SelectedUnit { get; } = new ReactiveProperty<IList>();
         public ReactiveCommand OnChangeSelected { get; } = new ReactiveCommand();
 
         public ReactiveProperty<ListUnitType> ShowUnitType { get; } = new ReactiveProperty<ListUnitType>(ListUnitType.All);
@@ -25,6 +25,8 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReadOnlyReactiveCollection<UserUnitViewModel> PartyUnits { get; private set; }
 
         public ReactiveProperty<bool> IsFullParty { get; } = new ReactiveProperty<bool>();
+        
+        public ReactiveProperty<Visibility> IsVisibleSelected { get; } = new ReactiveProperty<Visibility>(Visibility.Collapsed);
         
         public ReactiveCommand OnSubmit { get; } = new ReactiveCommand();
         public ReactiveCommand OnCancel { get; } = new ReactiveCommand();
@@ -92,6 +94,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             }
 
             IsFullParty.Value = selected.Length == 5;
+            IsVisibleSelected.Value = selected.Length != 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         /// <summary>

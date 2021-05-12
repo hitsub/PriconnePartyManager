@@ -9,6 +9,7 @@
         xmlns:interactivity="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.WPF"
         xmlns:vm="clr-namespace:PriconnePartyManager.Scripts.Mvvm.ViewModel"
         xmlns:enum="clr-namespace:PriconnePartyManager.Scripts.Enum"
+        xmlns:controls="clr-namespace:PriconnePartyManager.Controls"
         mc:Ignorable="d"
         Title="EditParty" Height="450" Width="800">
     <Window.Resources>
@@ -61,7 +62,7 @@
                 <!-- コレクション項目をどのようにレイアウトするか(リストの並び方をどうするか)を決定する -->
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel ItemWidth="100" ItemHeight="120" />
+                        <WrapPanel ItemWidth="Auto" ItemHeight="Auto" />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
 
@@ -69,12 +70,7 @@
                 <!-- 各項目のデータ オブジェクトをどのように表示するかを決定する(リストの中身をつくる) -->
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:UnitViewModel}">
-                        <Grid>
-                            <StackPanel Margin="5,5,5,0">
-                                <Image Source="{Binding Icon.Value}" Visibility="{Binding IsVisibility.Value}"/>
-                                <TextBlock Text="{Binding Name.Value}" FontSize="11" Foreground="Black" HorizontalAlignment="Center" Width="90" Height="15"/>
-                            </StackPanel>
-                        </Grid>
+                        <controls:UnitThumbnail/> <!--Unit-->
                     </DataTemplate>
                 </ListBox.ItemTemplate>
 
@@ -203,16 +199,16 @@
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <TextBox Margin="10,10,10,0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible">
+                    <TextBox Margin="10,10,10,0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Visibility="{Binding IsVisibleSelected.Value}">
                         <TextBox.Style>
                             <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                                 <Style.Resources>
                                     <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Top" Stretch="None">
                                         <VisualBrush.Visual>
-                                            <Label Content="備考欄" Foreground="Gray"/>
+                                            <Label Content="備考欄" Foreground="Gray" Visibility="{Binding IsVisibleSelected.Value}"/>
                                         </VisualBrush.Visual>
                                     </VisualBrush>
                                 </Style.Resources>
@@ -233,10 +229,10 @@
                 </Grid>
                 <Grid Grid.Row="1">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Margin="10,10,0,10" Width="80" Height="30" IsCancel="True" Command="{Binding OnCancel}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                        <Button Margin="10,10,0,10" Width="80" Height="30" IsCancel="True" Command="{Binding OnCancel}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Visibility="{Binding IsVisibleSelected.Value}">
                             <TextBlock Text="キャンセル"></TextBlock>
                         </Button>
-                        <Button Margin="10,10,10,10" Width="80" Height="30" IsDefault="True" Command="{Binding OnSubmit}" Background="LightSkyBlue" IsEnabled="{Binding IsFullParty.Value}">
+                        <Button Margin="10,10,10,10" Width="80" Height="30" IsDefault="True" Command="{Binding OnSubmit}" Background="LightSkyBlue" IsEnabled="{Binding IsFullParty.Value}" Visibility="{Binding IsVisibleSelected.Value}">
                             <TextBlock Text="保存"></TextBlock>
                         </Button>
                     </StackPanel>
