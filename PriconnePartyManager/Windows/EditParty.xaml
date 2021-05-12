@@ -11,31 +11,59 @@
         xmlns:enum="clr-namespace:PriconnePartyManager.Scripts.Enum"
         xmlns:controls="clr-namespace:PriconnePartyManager.Controls"
         mc:Ignorable="d"
-        Title="EditParty" Height="450" Width="800">
+        Title="EditParty" Height="550" Width="835">
     <Window.Resources>
         <xaml:RadioButtonConverter x:Key="EnumConverter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0">
-            <StackPanel Orientation="Horizontal">
-                <RadioButton GroupName="UnitType" Content="全て" IsChecked="{Binding ShowUnitType.Value, ConverterParameter=All, Converter={StaticResource EnumConverter}}"/>
-                <RadioButton GroupName="UnitType" Content="前衛" IsChecked="{Binding ShowUnitType.Value, ConverterParameter=Front, Converter={StaticResource EnumConverter}}"/>
-                <RadioButton GroupName="UnitType" Content="中衛" IsChecked="{Binding ShowUnitType.Value, ConverterParameter=Middle, Converter={StaticResource EnumConverter}}"/>
-                <RadioButton GroupName="UnitType" Content="後衛" IsChecked="{Binding ShowUnitType.Value, ConverterParameter=Back, Converter={StaticResource EnumConverter}}"/>
+        <Grid Row="0">
+            <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                <RadioButton GroupName="UnitType" 
+                             IsChecked="{Binding ShowUnitType.Value, ConverterParameter=All, Converter={StaticResource EnumConverter}}" 
+                             Style="{StaticResource {x:Type ToggleButton}}">
+                    <StackPanel Margin="10,2,10,2">
+                        <TextBlock Text="全て" Margin="8,0,8,0"/>
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton GroupName="UnitType" 
+                             IsChecked="{Binding ShowUnitType.Value, ConverterParameter=Front, Converter={StaticResource EnumConverter}}" 
+                             Style="{StaticResource {x:Type ToggleButton}}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,2,10,2">
+                        <Image Source="/Resources/unit_type_front.png" Height="16" RenderOptions.BitmapScalingMode="Fant"></Image>
+                        <TextBlock Text="前衛" Margin="2,0,0,0"/>
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton GroupName="UnitType" 
+                             IsChecked="{Binding ShowUnitType.Value, ConverterParameter=Middle, Converter={StaticResource EnumConverter}}"
+                             Style="{StaticResource {x:Type ToggleButton}}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,2,10,2">
+                        <Image Source="/Resources/unit_type_middle.png" Height="16" RenderOptions.BitmapScalingMode="Fant"></Image>
+                        <TextBlock Text="中衛" Margin="2,0,0,0"/>
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton GroupName="UnitType" 
+                             IsChecked="{Binding ShowUnitType.Value, ConverterParameter=Back, Converter={StaticResource EnumConverter}}" 
+                             Style="{StaticResource {x:Type ToggleButton}}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,2,10,2">
+                        <Image Source="/Resources/unit_type_back.png" Height="16" RenderOptions.BitmapScalingMode="Fant"></Image>
+                        <TextBlock Text="後衛" Margin="2,0,0,0"/>
+                    </StackPanel>
+                </RadioButton>
             </StackPanel>
+        </Grid>
+        <Grid Row="1">
             <!-- ユニット一覧 -->
             <xaml:MultiSelectListBox
-                Grid.Row="0" 
                 ItemsSource="{Binding UnitList}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                 SelectedItems="{Binding SelectedUnit.Value}"
                 SelectionMode="Multiple"
-                Margin="0,20,0,0"
             >
                 <b:Interaction.Behaviors>
                     <xaml:LimitSelectionBehavior Limit="5" />
@@ -104,7 +132,7 @@
                 </ListBox.ItemContainerStyle>
             </xaml:MultiSelectListBox>
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="0" Background="Lavender">
+        <Grid Grid.Row="2" Background="Lavender">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="500"/>
                 <ColumnDefinition Width="*"/>
@@ -229,10 +257,14 @@
                 </Grid>
                 <Grid Grid.Row="1">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Margin="10,10,0,10" Width="80" Height="30" IsCancel="True" Command="{Binding OnCancel}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Visibility="{Binding IsVisibleSelected.Value}">
+                        <Button Margin="10,10,0,10" Width="80" Height="30" IsCancel="True" 
+                                Command="{Binding OnCancel}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                                Visibility="{Binding IsVisibleSelected.Value}">
                             <TextBlock Text="キャンセル"></TextBlock>
                         </Button>
-                        <Button Margin="10,10,10,10" Width="80" Height="30" IsDefault="True" Command="{Binding OnSubmit}" Background="LightSkyBlue" IsEnabled="{Binding IsFullParty.Value}" Visibility="{Binding IsVisibleSelected.Value}">
+                        <Button Margin="10,10,10,10" Width="80" Height="30" IsDefault="True" 
+                                Command="{Binding OnSubmit}" Background="LightSkyBlue" IsEnabled="{Binding IsFullParty.Value}" 
+                                Visibility="{Binding IsVisibleSelected.Value}">
                             <TextBlock Text="保存"></TextBlock>
                         </Button>
                     </StackPanel>

@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\unit_type_back.png" />
+    <None Remove="Resources\unit_type_front.png" />
+    <None Remove="Resources\unit_type_middle.png" />
+    <None Remove="Windows\unit_type_back.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\unit_type_back.png" />
+    <Resource Include="Resources\unit_type_middle.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Imazen.WebP" Version="10.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5">
@@ -16,6 +28,14 @@
     <PackageReference Include="ReactiveProperty" Version="7.10.0" />
     <PackageReference Include="ReactiveProperty.Core" Version="7.10.0" />
     <PackageReference Include="ReactiveProperty.WPF" Version="7.10.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Windows\unit_type_back.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\unit_type_front.png" />
   </ItemGroup>
 
 </Project>
