@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Windows;
+using PriconnePartyManager.Scripts.Common;
 using PriconnePartyManager.Scripts.DataModel;
 using PriconnePartyManager.Scripts.Enum;
 using PriconnePartyManager.Scripts.Mvvm.Common;
@@ -51,7 +49,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             PartyUnits = m_PartyUnitsCollection.ToReadOnlyReactiveCollection(x => new UserUnitViewModel(x));
 
             OnCancel.Subscribe(x => CloseWindow((Window)x));
-            OnSubmit.Subscribe(SaveParty);
+            OnSubmit.Subscribe(x => SaveParty((Window)x));
             
             OnSearchTextChanged.Subscribe(() => { SearchUnit(SearchText.Value); });
 
@@ -156,19 +154,11 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             window.Close();
         }
 
-        private void SaveParty()
+        private void SaveParty(Window window)
         {
-            var options = new JsonSerializerOptions
-            {
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                PropertyNameCaseInsensitive = true,
-            };
-            var json = JsonSerializer.Serialize(m_PartUnits, options);
-            Console.WriteLine(json);
-
-            var instance = JsonSerializer.Deserialize<UserUnit[]>(json, options);
-            Console.WriteLine(instance);
+            var party = new UserParty(m_PartUnits);
+            Database.I.AddParty(party);
+            window.Close();
         }
     }
 }

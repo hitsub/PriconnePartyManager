@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="Imazen.WebP" Version="10.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5">
@@ -36,6 +37,9 @@
 
   <ItemGroup>
     <Resource Include="Resources\unit_type_front.png" />
+    <Reference Include="Windows.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime">
+      <HintPath>C:\WINDOWS\system32\WinMetadata\Windows.UI.Xaml.winmd</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

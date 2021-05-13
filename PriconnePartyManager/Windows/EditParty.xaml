@@ -294,7 +294,8 @@
                             <TextBlock Text="キャンセル"></TextBlock>
                         </Button>
                         <Button Margin="10,10,10,10" Width="80" Height="30" IsDefault="True" 
-                                Command="{Binding OnSubmit}" Background="LightSkyBlue" IsEnabled="{Binding IsFullParty.Value}" 
+                                Command="{Binding OnSubmit}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" 
+                                Background="LightSkyBlue" IsEnabled="{Binding IsFullParty.Value}" 
                                 Visibility="{Binding IsVisibleSelected.Value}">
                             <TextBlock Text="保存"></TextBlock>
                         </Button>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using PriconnePartyManager.Scripts.DataModel;
 using PriconnePartyManager.Scripts.Sql;
@@ -6,14 +7,21 @@ using PriconnePartyManager.Scripts.Sql.Model;
 
 namespace PriconnePartyManager.Scripts.Common
 {
+    /// <summary>
+    /// 各所で使うデータの管理を行うクラス
+    /// </summary>
     public class Database : Singleton<Database>
     {
         public Unit[] Units { get; private set; }
+        public List<UserParty> UserParties { get; private set; }
 
         private int[] m_UnlockRarity6UnitIds;
         private int[] m_PlayableUnitIds;
         private UnitProfile[] m_UnitProfiles;
         private UnitData[] m_UnitData;
+
+        public event Action<UserParty> OnAddUserParty;
+        public event Action<UserParty> OnRemoveUserParty;
             
         public Database()
         {
@@ -34,7 +42,10 @@ namespace PriconnePartyManager.Scripts.Common
                 .Select(x => x.UnitId)
                 .Distinct().ToArray();
             
+            sqlConnector.Dispose();
+            
             CreateUnits();
+            LoadParties();
         }
 
         private void CreateUnits()
@@ -55,5 +66,30 @@ namespace PriconnePartyManager.Scripts.Common
             
             Units = units.ToArray();
         }
+
+        private void LoadParties()
+        {
+            UserParties = new List<UserParty>();
+            var exists = FileManager.I.LoadJson<UserParty[]>();
+            if (exists?.Length > 0)
+            {
+                UserParties.AddRange(exists);
+            }
+        }
+
+        public void AddParty(UserParty party)
+        {
+            UserParties.Add(party);
+            OnAddUserParty?.Invoke(party);
+            FileManager.I.SaveJson(UserParties.ToArray());
+        }
+
+        public void RemoveParty(UserParty party)
+        {
+            UserParties.Remove(party);
+            OnRemoveUserParty?.Invoke(party);
+            FileManager.I.SaveJson(UserParties.ToArray());
+        }
+        
     }
 }
