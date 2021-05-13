@@ -32,11 +32,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Windows\unit_type_back.png" />
+    <Resource Include="Resources\unit_type_front.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\unit_type_front.png" />
     <Reference Include="Windows.UI.Xaml, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime">
       <HintPath>C:\WINDOWS\system32\WinMetadata\Windows.UI.Xaml.winmd</HintPath>
     </Reference>
