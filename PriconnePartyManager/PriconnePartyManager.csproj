@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\rank_default.png" />
+    <None Remove="Resources\rank_purple.png" />
+    <None Remove="Resources\rank_red.png" />
+    <None Remove="Resources\rank_yellow.png" />
+    <None Remove="Resources\rarity_3.png" />
+    <None Remove="Resources\rarity_4.png" />
+    <None Remove="Resources\rarity_5.png" />
+    <None Remove="Resources\rarity_6.png" />
+    <None Remove="Resources\rarity_default.png" />
     <None Remove="Resources\unit_type_back.png" />
     <None Remove="Resources\unit_type_front.png" />
     <None Remove="Resources\unit_type_middle.png" />
@@ -14,8 +23,35 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\rank_default.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\rank_purple.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\rank_red.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\rank_yellow.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\rarity_3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\rarity_4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\rarity_5.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\rarity_6.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\rarity_default.png" />
     <Resource Include="Resources\unit_type_back.png" />
     <Resource Include="Resources\unit_type_middle.png" />
+    <None Remove="Resources\support_label.png" />
+    <Resource Include="Resources\support_label.png" />
   </ItemGroup>
 
   <ItemGroup>
