@@ -14,6 +14,9 @@
         Title="MainWindow" Height="600" Width="1000">
     <Window.Resources>
         <xaml:RadioButtonConverter x:Key="EnumConverter" />
+        <xaml:RarityToImageSourceConverter x:Key="RarityToImageSourceConverter"/>
+        <xaml:RankToImageSourceConverter x:Key="RankToImageSourceConverter"/>
+        <xaml:SupportFlagToImageSourceConverter x:Key="SupportFlagToImageSourceConverter"/>
     </Window.Resources>
     <Grid ShowGridLines="True">
         <Grid.ColumnDefinitions>
@@ -103,15 +106,18 @@
                                         <DataTemplate DataType="{x:Type vm:UserUnitViewModel}">
                                             <Grid>
                                                 <!-- サムネ中身 -->
-                                                <StackPanel >
-                                                    <!-- サムネ -->
-                                                    <Image Source="{Binding Icon.Value}" Width="60" Margin="5,5,5,5"/>
-                                                    <!-- サポートチェック -->
-                                                    <TextBlock Text="{Binding IsSupport.Value}"></TextBlock>
-                                                    <!-- ★ -->
-                                                    <TextBlock Text="{Binding Rarity.Value}"></TextBlock>
-                                                    <!-- ランク -->
-                                                    <TextBlock Text="{Binding Rank.Value}"></TextBlock>
+                                                <StackPanel>
+                                                    <Grid>
+                                                        <!-- サムネ -->
+                                                        <Image Source="{Binding Icon.Value}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                        <!-- サポートか -->
+                                                        <Image Source="{Binding IsSupport.Value, Converter={StaticResource SupportFlagToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                        <!-- 枠 -->
+                                                        <Image Source="{Binding Rank.Value, Converter={StaticResource RankToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                        <!-- ★ -->
+                                                        <Image Source="{Binding Rarity.Value, Converter={StaticResource RarityToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                    </Grid>
+                                                    <TextBlock Text="{Binding RankView.Value}" Visibility="{Binding IsShowRank.Value}" TextAlignment="Center" Foreground="Black" Margin="0,0,0,5" FontSize="11"/>
                                                 </StackPanel>
                                             </Grid>
                                         </DataTemplate>
