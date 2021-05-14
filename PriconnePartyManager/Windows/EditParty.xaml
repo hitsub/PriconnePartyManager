@@ -89,11 +89,11 @@
         </Grid>
         <Grid Row="1">
             <!-- ユニット一覧 -->
-            <xaml:MultiSelectListBox
+            <xaml:MultiSelectListBox x:Name="MultiSelectListBox"
                 ItemsSource="{Binding UnitList}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Auto"
-                SelectedItems="{Binding SelectedUnit.Value}"
+                SelectedItemList="{Binding SelectedUnit.Value}"
                 SelectionMode="Multiple"
             >
                 <b:Interaction.Behaviors>
@@ -137,7 +137,7 @@
                 <!--項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作を決定する-->
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
-                        <Setter Property="IsSelected" Value="{Binding IsSelect.Value}"/>
+                        <Setter Property="IsSelected" Value="{Binding IsSelect.Value, Mode=TwoWay}"/>
                         <Setter Property="Foreground" Value="Gray" />
                         <Setter Property="FontSize" Value="15" />
 
@@ -261,7 +261,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    <TextBox Margin="10,10,10,0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Visibility="{Binding IsVisibleSelected.Value}">
+                    <TextBox Text="{Binding PartyComment.Value}" Margin="10,10,10,0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Visibility="{Binding IsVisibleSelected.Value}">
                         <TextBox.Style>
                             <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                                 <Style.Resources>

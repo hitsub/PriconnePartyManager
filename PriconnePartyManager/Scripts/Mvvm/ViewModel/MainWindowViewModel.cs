@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using PriconnePartyManager.Scripts.Common;
 using PriconnePartyManager.Scripts.DataModel;
 using PriconnePartyManager.Scripts.Mvvm.Common;
@@ -27,18 +28,27 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             });
 
             Database.I.OnAddUserParty += OnAddParty;
+            Database.I.OnChangeUserParty += OnChangePaty;
             Database.I.OnRemoveUserParty += OnRemoveParty;
         }
 
         ~MainWindowViewModel()
         {
             Database.I.OnAddUserParty -= OnAddParty;
+            Database.I.OnChangeUserParty -= OnChangePaty;
             Database.I.OnRemoveUserParty -= OnRemoveParty;
         }
 
         private void OnAddParty(UserParty party)
         {
             m_PartyUnitsCollection.Add(party);
+        }
+
+        private void OnChangePaty(UserParty party)
+        {
+            var collection = m_PartyUnitsCollection.ToList();
+            var index = m_PartyUnitsCollection.ToList().FindIndex(x => x.Id == party.Id);
+            m_PartyUnitsCollection[index] = party;
         }
 
         private void OnRemoveParty(UserParty party)

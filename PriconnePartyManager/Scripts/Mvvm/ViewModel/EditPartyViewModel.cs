@@ -29,8 +29,10 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         
         public ReactiveProperty<string> SearchText { get; } = new ReactiveProperty<string>(string.Empty);
         
-        public ReactiveCommand OnSearchTextChanged { get; set; } = new ReactiveCommand();
+        public ReactiveProperty<string> PartyComment { get; } = new ReactiveProperty<string>(string.Empty);
         
+        public ReactiveCommand OnSearchTextChanged { get; set; } = new ReactiveCommand();
+
         public ReactiveCommand OnSubmit { get; } = new ReactiveCommand();
         public ReactiveCommand OnCancel { get; } = new ReactiveCommand();
 
@@ -39,8 +41,9 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         private readonly ObservableCollection<UserUnit> m_PartyUnitsCollection;
         private List<UserUnit> m_PartUnits = new List<UserUnit>();
         private ListUnitType m_CurrentUnitType = ListUnitType.All;
+        private UserParty m_Party = null;
 
-        public EditPartyViewModel(Unit[] units)
+        public EditPartyViewModel(Unit[] units, UserParty party = null)
         {
             m_Units = units.OrderBy(x => x.Order).ToArray();
             m_UnitsCollection = new ObservableCollection<Unit>(units);
@@ -56,6 +59,29 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             ShowUnitType.Subscribe(OnChangeShowUnitType);
             OnChangeSelected.Subscribe(OnChangeSelectedUnit);
             SetUnitsList(m_Units);
+
+            if (party != null)
+            {
+                m_Party = party;
+                m_PartUnits = party.UserUnits.ToList();
+                foreach (var unitViewModel in UnitList)
+                {
+                    if (m_PartUnits.Any(x => x.UnitId == unitViewModel.Unit.Id))
+                    {
+                        unitViewModel.SetSelect(true);
+                        //break;
+                    }
+                }
+                m_PartyUnitsCollection.Clear();
+                foreach (var unit in m_PartUnits)
+                {
+                    m_PartyUnitsCollection.Add(unit);
+                }
+
+                IsFullParty.Value = true;
+                IsVisibleSelected.Value = Visibility.Visible;
+                PartyComment.Value = party.Comment;
+            }
         }
 
         /// <summary>
@@ -156,8 +182,15 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
 
         private void SaveParty(Window window)
         {
-            var party = new UserParty(m_PartUnits);
-            Database.I.AddParty(party);
+            if (m_Party == null)
+            {
+                m_Party = new UserParty(m_PartUnits, PartyComment.Value);
+            }
+            else
+            {
+                m_Party.UpdateData(m_PartUnits, PartyComment.Value);
+            }
+            Database.I.SaveParty(m_Party);
             window.Close();
         }
     }

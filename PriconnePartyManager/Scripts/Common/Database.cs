@@ -22,6 +22,8 @@ namespace PriconnePartyManager.Scripts.Common
 
         public event Action<UserParty> OnAddUserParty;
         public event Action<UserParty> OnRemoveUserParty;
+
+        public event Action<UserParty> OnChangeUserParty;
             
         public Database()
         {
@@ -77,11 +79,21 @@ namespace PriconnePartyManager.Scripts.Common
             }
         }
 
-        public void AddParty(UserParty party)
+        public void SaveParty(UserParty party)
         {
-            UserParties.Add(party);
-            OnAddUserParty?.Invoke(party);
-            FileManager.I.SaveJson(UserParties.ToArray());
+            if (UserParties.Contains(party))
+            {
+                var index = UserParties.FindIndex(x => x.Id == party.Id);
+                UserParties[index] = party;
+                OnChangeUserParty?.Invoke(party);
+                FileManager.I.SaveJson(UserParties.ToArray());
+            }
+            else
+            {
+                UserParties.Add(party);
+                OnAddUserParty?.Invoke(party);
+                FileManager.I.SaveJson(UserParties.ToArray());
+            }
         }
 
         public void RemoveParty(UserParty party)

@@ -16,7 +16,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         
         public Unit Unit { get; }
         
-        public ReactiveProperty<bool> IsSelect { get; set; }
+        public ReactiveProperty<bool> IsSelect { get; }
         
         public ReactiveProperty<Visibility> IsVisibility { get; set; }
         
@@ -32,6 +32,11 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             Icon.AddTo(m_Disposables);
             IsSelect.AddTo(m_Disposables);
             IsVisibility.AddTo(m_Disposables);
+        }
+
+        public void SetSelect(bool isSelect)
+        {
+            IsSelect.Value = isSelect;
         }
     }
 }

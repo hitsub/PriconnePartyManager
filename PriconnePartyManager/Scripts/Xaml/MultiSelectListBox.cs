@@ -6,24 +6,24 @@ namespace PriconnePartyManager.Scripts.Xaml
 {
     public class MultiSelectListBox : ListBox
     {
-        public new static readonly DependencyProperty SelectedItemsProperty =
+        public new static readonly DependencyProperty SelectedItemListProperty =
             DependencyProperty.Register(
-                nameof(SelectedItems), typeof(IList),
+                nameof(SelectedItemList), typeof(IList),
                 typeof(MultiSelectListBox),
                 new FrameworkPropertyMetadata(null,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        public new IList SelectedItems
+        public new IList SelectedItemList
         {
-            get { return (IList)this.GetValue(SelectedItemsProperty); }
-            set { this.SetValue(SelectedItemsProperty, value); }
+            get { return (IList)this.GetValue(SelectedItemListProperty); }
+            set { this.SetValue(SelectedItemListProperty, value); }
         }
 
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
             base.OnSelectionChanged(e);
 
-            this.SelectedItems = base.SelectedItems;
+            this.SelectedItemList = base.SelectedItems;
         }
     }
 }

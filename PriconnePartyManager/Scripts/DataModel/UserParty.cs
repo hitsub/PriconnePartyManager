@@ -16,6 +16,9 @@ namespace PriconnePartyManager.Scripts.DataModel
         public string Id { get; set; }
         public IEnumerable<UserUnit> UserUnits { get; set; }
         
+        /// <summary>　補足情報やTLなど　</summary>
+        public string Comment { get; set; }
+        
         /// <summary> ユーザーが任意につけれるタグ </summary>
         public string[] Tags { get; set; }
         
@@ -26,10 +29,17 @@ namespace PriconnePartyManager.Scripts.DataModel
         {
         }
 
-        public UserParty(IEnumerable<UserUnit> userUnits)
+        public UserParty(IEnumerable<UserUnit> userUnits, string comment = null)
         {
             UserUnits = userUnits;
+            Comment = comment;
             Id = GenerateId();
+        }
+
+        public void UpdateData(IEnumerable<UserUnit> userUnits, string comment = null)
+        {
+            UserUnits = userUnits;
+            Comment = comment;
         }
 
         /// <summary>
