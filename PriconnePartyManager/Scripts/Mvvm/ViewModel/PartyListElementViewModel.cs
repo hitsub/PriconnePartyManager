@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using PriconnePartyManager.Scripts.Common;
 using PriconnePartyManager.Scripts.DataModel;
 using PriconnePartyManager.Scripts.Extension;
@@ -22,6 +23,10 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReadOnlyReactiveCollection<UserUnitViewModel> PartyUnits { get; private set; }
         
         public ReactiveProperty<string> CommentFirstLine { get; } = new ReactiveProperty<string>(string.Empty);
+        
+        public ReactiveProperty<bool> IsExpandComment { get; } = new ReactiveProperty<bool>(false);
+        
+        public ReactiveProperty<Visibility> IsShowExpandCommentButton { get; } = new ReactiveProperty<Visibility>();
 
         public ReactiveCommand EditParty { get; } = new ReactiveCommand();
 
@@ -37,6 +42,20 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             PartyUnits = m_PartyUnitsCollection.ToReadOnlyReactiveCollection(x => new UserUnitViewModel(x));
 
             CommentFirstLine.Value = party.Comment?.GetFirstLine() ?? string.Empty;
+
+            IsExpandComment.Subscribe(x =>
+            {
+                if (x)
+                {
+                    CommentFirstLine.Value = party.Comment;
+                }
+                else
+                {
+                    CommentFirstLine.Value = party.Comment?.GetFirstLine() ?? string.Empty;
+                }
+            });
+
+            IsShowExpandCommentButton.Value = party.Comment?.GetLineCount() <= 1 ? Visibility.Collapsed : Visibility.Visible;
 
             EditParty.Subscribe(x =>
             {

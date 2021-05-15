@@ -66,7 +66,7 @@ namespace PriconnePartyManager.Scripts.Common
                 units.Add(unit);
             }
             
-            Units = units.ToArray();
+            Units = units.OrderBy(x => x.Order).ToArray();
         }
 
         private void LoadParties()

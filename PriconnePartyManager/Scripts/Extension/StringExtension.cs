@@ -10,5 +10,11 @@ namespace PriconnePartyManager.Scripts.Extension
             var separator = new[] {Environment.NewLine};
             return self.Split(separator, StringSplitOptions.None).FirstOrDefault();
         }
+
+        public static int GetLineCount(this string self)
+        {
+            var separator = new[] {Environment.NewLine};
+            return self.Split(separator, StringSplitOptions.None).Length;
+        }
     }
 }

@@ -36,16 +36,14 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReactiveCommand OnSubmit { get; } = new ReactiveCommand();
         public ReactiveCommand OnCancel { get; } = new ReactiveCommand();
 
-        private readonly Unit[] m_Units;
         private readonly ObservableCollection<Unit> m_UnitsCollection;
         private readonly ObservableCollection<UserUnit> m_PartyUnitsCollection;
         private List<UserUnit> m_PartUnits = new List<UserUnit>();
         private ListUnitType m_CurrentUnitType = ListUnitType.All;
-        private UserParty m_Party = null;
+        private UserParty m_Party;
 
         public EditPartyViewModel(Unit[] units, UserParty party = null)
         {
-            m_Units = units.OrderBy(x => x.Order).ToArray();
             m_UnitsCollection = new ObservableCollection<Unit>(units);
             UnitList = m_UnitsCollection.ToReadOnlyReactiveCollection(x => new UnitViewModel(x));
             m_PartyUnitsCollection = new ObservableCollection<UserUnit>();
@@ -58,7 +56,6 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
 
             ShowUnitType.Subscribe(OnChangeShowUnitType);
             OnChangeSelected.Subscribe(OnChangeSelectedUnit);
-            SetUnitsList(m_Units);
 
             if (party != null)
             {
@@ -69,7 +66,6 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                     if (m_PartUnits.Any(x => x.UnitId == unitViewModel.Unit.Id))
                     {
                         unitViewModel.SetSelect(true);
-                        //break;
                     }
                 }
                 m_PartyUnitsCollection.Clear();
@@ -81,18 +77,6 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                 IsFullParty.Value = true;
                 IsVisibleSelected.Value = Visibility.Visible;
                 PartyComment.Value = party.Comment;
-            }
-        }
-
-        /// <summary>
-        /// 指定ユニットの一覧表示
-        /// </summary>
-        private void SetUnitsList(IEnumerable<Unit> units)
-        {
-            m_UnitsCollection.Clear();
-            foreach (var unit in units)
-            {
-                m_UnitsCollection.Add(unit);
             }
         }
 
