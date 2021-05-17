@@ -23,23 +23,25 @@ namespace PriconnePartyManager.Scripts.DataModel
         public string[] Tags { get; set; }
         
         /// <summary> 推定ダメージ </summary>
-        public int EstimateDamage { get; set; }
+        public string EstimateDamage { get; set; }
 
         public UserParty()
         {
         }
 
-        public UserParty(IEnumerable<UserUnit> userUnits, string comment = null)
+        public UserParty(IEnumerable<UserUnit> userUnits, string comment = null, string estimateDamage = null)
         {
             UserUnits = userUnits;
             Comment = comment;
+            EstimateDamage = estimateDamage;
             Id = GenerateId();
         }
 
-        public void UpdateData(IEnumerable<UserUnit> userUnits, string comment = null)
+        public void UpdateData(IEnumerable<UserUnit> userUnits, string comment = null, string estimateDamage = null)
         {
             UserUnits = userUnits;
             Comment = comment;
+            EstimateDamage = estimateDamage;
         }
 
         /// <summary>

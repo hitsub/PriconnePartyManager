@@ -77,4 +77,17 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Update="Windows\ImportParty.xaml">
+      <Generator></Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Windows\ImportParty.xaml.cs">
+      <DependentUpon>ImportParty.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

@@ -14,19 +14,6 @@ namespace PriconnePartyManager.Windows
 		{
 			InitializeComponent();
 			DataContext = new EditPartyViewModel(Database.I.Units, party);
-			//SetSelectedItems(party);
-		}
-
-		private void SetSelectedItems(UserParty party)
-		{
-			if (party == null)
-			{
-				return;
-			}
-			foreach (var userUnit in party.UserUnits)
-			{
-				MultiSelectListBox.SelectedItems.Add(new UnitViewModel(userUnit.Unit));
-			}
 		}
 	}
 }

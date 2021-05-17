@@ -90,10 +90,15 @@ namespace PriconnePartyManager.Scripts.Common
             }
             else
             {
-                UserParties.Add(party);
-                OnAddUserParty?.Invoke(party);
-                FileManager.I.SaveJson(UserParties.ToArray());
+                AddParty(party);
             }
+        }
+
+        public void AddParty(UserParty party)
+        {
+            UserParties.Add(party);
+            OnAddUserParty?.Invoke(party);
+            FileManager.I.SaveJson(UserParties.ToArray());
         }
 
         public void RemoveParty(UserParty party)

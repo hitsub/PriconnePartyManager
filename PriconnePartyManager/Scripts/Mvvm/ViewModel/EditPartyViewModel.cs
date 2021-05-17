@@ -31,6 +31,8 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         
         public ReactiveProperty<string> PartyComment { get; } = new ReactiveProperty<string>(string.Empty);
         
+        public ReactiveProperty<string> EstimateDamage { get; } = new ReactiveProperty<string>(string.Empty);
+        
         public ReactiveCommand OnSearchTextChanged { get; set; } = new ReactiveCommand();
 
         public ReactiveCommand OnSubmit { get; } = new ReactiveCommand();
@@ -77,6 +79,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                 IsFullParty.Value = true;
                 IsVisibleSelected.Value = Visibility.Visible;
                 PartyComment.Value = party.Comment;
+                EstimateDamage.Value = party.EstimateDamage;
             }
         }
 
@@ -168,11 +171,11 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         {
             if (m_Party == null)
             {
-                m_Party = new UserParty(m_PartUnits, PartyComment.Value);
+                m_Party = new UserParty(m_PartUnits, PartyComment.Value, EstimateDamage.Value);
             }
             else
             {
-                m_Party.UpdateData(m_PartUnits, PartyComment.Value);
+                m_Party.UpdateData(m_PartUnits, PartyComment.Value, EstimateDamage.Value);
             }
             Database.I.SaveParty(m_Party);
             window.Close();
