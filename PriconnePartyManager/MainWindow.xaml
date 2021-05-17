@@ -137,20 +137,67 @@
                                                     <ListBox.ItemTemplate>
                                                         <DataTemplate DataType="{x:Type vm:UserUnitViewModel}">
                                                             <Grid>
-                                                                <!-- サムネ中身 -->
-                                                                <StackPanel>
+                                                                <Border CornerRadius="5" BorderThickness="2" Margin="2,2,2,2">
+                                                                    <!-- サムネ中身 -->
                                                                     <Grid>
-                                                                        <!-- サムネ -->
-                                                                        <Image Source="{Binding Icon.Value}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
-                                                                        <!-- サポートか -->
-                                                                        <Image Source="{Binding IsSupport.Value, Converter={StaticResource SupportFlagToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
-                                                                        <!-- 枠 -->
-                                                                        <Image Source="{Binding Rank.Value, Converter={StaticResource RankToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
-                                                                        <!-- ★ -->
-                                                                        <Image Source="{Binding Rarity.Value, Converter={StaticResource RarityToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                        <Grid.RowDefinitions>
+                                                                            <RowDefinition Height="*"/>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                        </Grid.RowDefinitions>
+                                                                        <Grid Row="0" VerticalAlignment="Top">
+                                                                            <!-- サムネ -->
+                                                                            <Image Source="{Binding Icon.Value}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                            <!-- サポートか -->
+                                                                            <Image Source="{Binding IsSupport.Value, Converter={StaticResource SupportFlagToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                            <!-- 枠 -->
+                                                                            <Image Source="{Binding Rank.Value, Converter={StaticResource RankToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                            <!-- ★ -->
+                                                                            <Image Source="{Binding Rarity.Value, Converter={StaticResource RarityToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                        </Grid>
+                                                                        <Grid Row="1">
+                                                                            <TextBlock Text="{Binding RankView.Value}" Visibility="{Binding IsShowRank.Value}" TextAlignment="Center" Foreground="Black" Margin="0,0,0,5" FontSize="11"/>
+                                                                        </Grid>
+                                                                        <Grid Row="2" VerticalAlignment="Bottom">
+                                                                            <Border VerticalAlignment="Bottom">
+                                                                                <TextBlock Text="キャラ被り" Foreground="WhiteSmoke" TextAlignment="Center"/>     
+                                                                                <Border.Style>
+                                                                                    <Style TargetType="Border">
+                                                                                        <Style.Triggers>
+                                                                                            <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
+                                                                                                <Setter Property="Background" Value="Tomato"/>
+                                                                                            </DataTrigger>
+                                                                                        </Style.Triggers>
+                                                                                    </Style>
+                                                                                </Border.Style>                                                                
+                                                                            </Border>
+                                                                            <Grid.Style>
+                                                                                <Style TargetType="Grid">
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
+                                                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                                                        </DataTrigger>
+                                                                                        <DataTrigger Binding="{Binding IsDoubling.Value}" Value="False">
+                                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Grid.Style>             
+                                                                        </Grid>
                                                                     </Grid>
-                                                                    <TextBlock Text="{Binding RankView.Value}" Visibility="{Binding IsShowRank.Value}" TextAlignment="Center" Foreground="Black" Margin="0,0,0,5" FontSize="11"/>
-                                                                </StackPanel>
+                                                                    <Border.Style>
+                                                                        <Style TargetType="Border">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
+                                                                                    <Setter Property="BorderBrush" Value="Tomato"/>
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding IsDoubling.Value}" Value="False">
+                                                                                    <Setter Property="BorderBrush" Value="White"/>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Border.Style>
+                                                                </Border>
                                                             </Grid>
                                                         </DataTemplate>
                                                     </ListBox.ItemTemplate>

@@ -24,9 +24,12 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReactiveCommand OnUnSelect { get; set; } = new ReactiveCommand();
         
         private readonly ObservableCollection<UserUnit> m_PartyUnitsCollection;
+        
+        public string Id { get; }
 
         public AttackRouteListElementViewModel(UserParty party, Action<UserParty> onUnSelect)
         {
+            Id = party.Id;
             m_PartyUnitsCollection = new ObservableCollection<UserUnit>(party.UserUnits);
             PartyUnits = m_PartyUnitsCollection.ToReadOnlyReactiveCollection(x => new UserUnitViewModel(x));
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using PriconnePartyManager.Scripts.Common;
@@ -13,21 +14,21 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
     {
         public ReadOnlyReactiveCollection<PartyListElementViewModel> UserParties { get; private set; }
         
-        public ReadOnlyReactiveCollection<AttackRouteListElementViewModel> AttackParties { get; }
+        public ReactiveCollection<AttackRouteListElementViewModel> AttackParties { get; }
         public ReactiveCommand AddParty { get; } = new ReactiveCommand();
 
         public ReactiveCommand ImportParty { get; } = new ReactiveCommand();
         
         private readonly ObservableCollection<UserParty> m_PartyUnitsCollection;
         private readonly ObservableCollection<UserParty> m_AttackPartyCollection;
+        private Dictionary<int, int> m_DoublingCheckTable = new Dictionary<int, int>();
 
         public MainWindowViewModel()
         {
             m_PartyUnitsCollection = new ObservableCollection<UserParty>(Database.I.UserParties);
             UserParties = m_PartyUnitsCollection.ToReadOnlyReactiveCollection(x => new PartyListElementViewModel(x, OnSelectAttackRoute));
             
-            m_AttackPartyCollection = new ObservableCollection<UserParty>();
-            AttackParties = m_AttackPartyCollection.ToReadOnlyReactiveCollection(x => new AttackRouteListElementViewModel(x, OnUnSelectAttackRoute));
+            AttackParties = new ReactiveCollection<AttackRouteListElementViewModel>();
 
             AddParty.Subscribe(() =>
             {
@@ -74,24 +75,60 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         {
             if (isSelect)
             {
-                m_AttackPartyCollection.Add(party);
+                AttackParties.Add(new AttackRouteListElementViewModel(party, OnUnSelectAttackRoute));
             }
             else
             {
-                m_AttackPartyCollection.Remove(party);
+                var target = AttackParties.SingleOrDefault(x => x.Id == party.Id);
+                AttackParties.Remove(target);
             }
+            CheckDoubling();
         }
 
         private void OnUnSelectAttackRoute(UserParty party)
         {
-            m_AttackPartyCollection.Remove(party);
+            var target = AttackParties.SingleOrDefault(x => x.Id == party.Id);
+            AttackParties.Remove(target);
             var userParty = UserParties.SingleOrDefault(x => x.Party.Value.Id == party.Id);
             //凸ルート編成後にユーザーパーティを消す場合があるので必ずチェックする
             if (userParty != null)
             {
                 userParty.IsSelectedRoute.Value = false;
             }
-            
+            CheckDoubling();
+        }
+
+        private void CheckDoubling()
+        {
+            m_DoublingCheckTable.Clear();
+            foreach (var attackParty in AttackParties)
+            {
+                foreach (var userUnit in attackParty.PartyUnits)
+                {
+                    if (userUnit.UserUnit.IsSupport)
+                    {
+                        continue;
+                    }
+
+                    if (m_DoublingCheckTable.ContainsKey(userUnit.UserUnit.UnitId))
+                    {
+                        m_DoublingCheckTable[userUnit.UserUnit.UnitId]++;
+                    }
+                    else
+                    {
+                        m_DoublingCheckTable.Add(userUnit.UserUnit.UnitId, 1);
+                    }
+                }
+            }
+
+            var doublingIds = m_DoublingCheckTable.Where(x => x.Value >= 2).Select(x => x.Key).ToArray();
+            foreach (var attackPartyViewModel in AttackParties)
+            {
+                foreach (var userUnitViewModel in attackPartyViewModel.PartyUnits)
+                {
+                    userUnitViewModel.IsDoubling.Value = doublingIds.Contains(userUnitViewModel.UserUnit.UnitId);
+                }
+            }
         }
     }
 }

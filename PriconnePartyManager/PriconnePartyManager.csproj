@@ -90,4 +90,8 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Scripts\Mvvm\Model" />
+  </ItemGroup>
+
 </Project>

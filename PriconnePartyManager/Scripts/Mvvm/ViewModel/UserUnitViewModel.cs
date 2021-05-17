@@ -20,6 +20,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReactiveProperty<string> RankView { get; }
         public ReactiveProperty<Visibility> IsShowRank { get; }
         public ReactiveProperty<UnitRarity> Rarity { get; }
+        public ReactiveProperty<bool> IsDoubling { get; }
 
         public UserUnitViewModel(UserUnit userUnit)
         {
@@ -30,6 +31,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             RankView = new ReactiveProperty<string>(string.Empty);
             IsShowRank = new ReactiveProperty<Visibility>();
             Rarity = new ReactiveProperty<UnitRarity>(UserUnit.Rarity);
+            IsDoubling = new ReactiveProperty<bool>(false);
 
             IsSupport.Subscribe(x => UserUnit.IsSupport = x);
             Rank.Subscribe(x =>
