@@ -144,9 +144,9 @@
                                                                         <Grid.RowDefinitions>
                                                                             <RowDefinition Height="Auto"/>
                                                                             <RowDefinition Height="Auto"/>
-                                                                            <RowDefinition Height="Auto"/>
+                                                                            <RowDefinition Height="*"/>
                                                                         </Grid.RowDefinitions>
-                                                                        <Grid Row="0" VerticalAlignment="Top">
+                                                                        <Grid Row="0">
                                                                             <!-- サムネ -->
                                                                             <Image Source="{Binding Icon.Value}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
                                                                             <!-- サポートか -->
@@ -156,17 +156,40 @@
                                                                             <!-- ★ -->
                                                                             <Image Source="{Binding Rarity.Value, Converter={StaticResource RarityToImageSourceConverter}}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
                                                                         </Grid>
-                                                                        <Grid Row="1" VerticalAlignment="Top">
+                                                                        <Grid Row="1">
                                                                             <TextBlock Text="{Binding RankView.Value}" Visibility="{Binding IsShowRank.Value}" TextAlignment="Center" Foreground="Black" Margin="0,0,0,5" FontSize="11"/>
                                                                         </Grid>
-                                                                        <Grid Row="2" VerticalAlignment="Bottom">
+                                                                        <Grid Row="2">
                                                                             <Border VerticalAlignment="Bottom">
-                                                                                <TextBlock Text="キャラ被り" Foreground="WhiteSmoke" TextAlignment="Center"/>     
+                                                                                <TextBlock  Foreground="WhiteSmoke" TextAlignment="Center">
+                                                                                    <TextBlock.Style>
+                                                                                        <Style TargetType="TextBlock">
+                                                                                            <Style.Triggers>
+                                                                                                <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
+                                                                                                    <Setter Property="Text" Value="キャラ被り"/>
+                                                                                                </DataTrigger>
+                                                                                                <DataTrigger Binding="{Binding IsDoublingSupport.Value}" Value="True">
+                                                                                                    <Setter Property="Text" Value="複数サポート"/>
+                                                                                                </DataTrigger>
+                                                                                                <MultiDataTrigger>
+                                                                                                    <MultiDataTrigger.Conditions>
+                                                                                                        <Condition Binding="{Binding IsDoubling.Value}" Value="False"/>
+                                                                                                        <Condition Binding="{Binding IsDoublingSupport.Value}" Value="False"/>
+                                                                                                    </MultiDataTrigger.Conditions>
+                                                                                                    <Setter Property="Text" Value=""/>
+                                                                                                </MultiDataTrigger>
+                                                                                            </Style.Triggers>
+                                                                                        </Style>
+                                                                                    </TextBlock.Style>
+                                                                                </TextBlock>     
                                                                                 <Border.Style>
                                                                                     <Style TargetType="Border">
                                                                                         <Style.Triggers>
                                                                                             <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
                                                                                                 <Setter Property="Background" Value="Crimson"/>
+                                                                                            </DataTrigger>
+                                                                                            <DataTrigger Binding="{Binding IsDoublingSupport.Value}" Value="True">
+                                                                                                <Setter Property="Background" Value="DodgerBlue"/>
                                                                                             </DataTrigger>
                                                                                         </Style.Triggers>
                                                                                     </Style>
@@ -178,12 +201,19 @@
                                                                                         <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
                                                                                             <Setter Property="Visibility" Value="Visible"/>
                                                                                         </DataTrigger>
-                                                                                        <DataTrigger Binding="{Binding IsDoubling.Value}" Value="False">
-                                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                        <DataTrigger Binding="{Binding IsDoublingSupport.Value}" Value="True">
+                                                                                            <Setter Property="Visibility" Value="Visible"/>
                                                                                         </DataTrigger>
+                                                                                        <MultiDataTrigger>
+                                                                                            <MultiDataTrigger.Conditions>
+                                                                                                <Condition Binding="{Binding IsDoubling.Value}" Value="False"/>
+                                                                                                <Condition Binding="{Binding IsDoublingSupport.Value}" Value="False"/>
+                                                                                            </MultiDataTrigger.Conditions>
+                                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                        </MultiDataTrigger>
                                                                                     </Style.Triggers>
                                                                                 </Style>
-                                                                            </Grid.Style>             
+                                                                            </Grid.Style>
                                                                         </Grid>
                                                                     </Grid>
                                                                     <Border.Style>
@@ -192,9 +222,16 @@
                                                                                 <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
                                                                                     <Setter Property="BorderBrush" Value="Crimson"/>
                                                                                 </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding IsDoubling.Value}" Value="False">
-                                                                                    <Setter Property="BorderBrush" Value="White"/>
+                                                                                <DataTrigger Binding="{Binding IsDoublingSupport.Value}" Value="True">
+                                                                                    <Setter Property="BorderBrush" Value="DodgerBlue"/>
                                                                                 </DataTrigger>
+                                                                                <MultiDataTrigger>
+                                                                                    <MultiDataTrigger.Conditions>
+                                                                                        <Condition Binding="{Binding IsDoubling.Value}" Value="False"/>
+                                                                                        <Condition Binding="{Binding IsDoublingSupport.Value}" Value="False"/>
+                                                                                    </MultiDataTrigger.Conditions>
+                                                                                    <Setter Property="BorderBrush" Value="White"/>
+                                                                                </MultiDataTrigger>
                                                                             </Style.Triggers>
                                                                         </Style>
                                                                     </Border.Style>

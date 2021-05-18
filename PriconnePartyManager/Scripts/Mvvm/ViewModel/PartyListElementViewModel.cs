@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using PriconnePartyManager.Scripts.Common;
 using PriconnePartyManager.Scripts.DataModel;
 using PriconnePartyManager.Scripts.Extension;
+using PriconnePartyManager.Scripts.Extensions;
 using PriconnePartyManager.Scripts.Mvvm.Common;
 using PriconnePartyManager.Windows;
 using Reactive.Bindings;
@@ -20,7 +22,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         
         public ReactiveProperty<UserParty> Party { get; } = new ReactiveProperty<UserParty>();
         
-        public ReadOnlyReactiveCollection<UserUnitViewModel> PartyUnits { get; private set; }
+        public ReactiveCollection<UserUnitViewModel> PartyUnits { get; private set; }
         
         public ReactiveProperty<string> Comment { get; } = new ReactiveProperty<string>(string.Empty);
         
@@ -40,18 +42,14 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         
         public ReactiveCommand OnSelect { get; set; } = new ReactiveCommand();
         
-        private readonly ObservableCollection<UserUnit> m_PartyUnitsCollection;
+        public string Id { get; }
 
         public PartyListElementViewModel(UserParty party, Action<UserParty, bool> onSelect)
         {
+            Id = party.Id;
             Party.Value = party;
             
-            m_PartyUnitsCollection = new ObservableCollection<UserUnit>(party.UserUnits);
-            PartyUnits = m_PartyUnitsCollection.ToReadOnlyReactiveCollection(x => new UserUnitViewModel(x));
-
-            Comment.Value = party.Comment?.GetFirstLine() ?? string.Empty;
-
-            EstimateDamage.Value = party.EstimateDamage;
+            PartyUnits = new ReactiveCollection<UserUnitViewModel>();
 
             IsExpandComment.Subscribe(x =>
             {
@@ -64,8 +62,6 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                     Comment.Value = party.Comment?.GetFirstLine() ?? string.Empty;
                 }
             });
-
-            IsShowExpandCommentButton.Value = party.Comment?.GetLineCount() <= 1 ? Visibility.Collapsed : Visibility.Visible;
 
             EditParty.Subscribe(x =>
             {
@@ -84,6 +80,20 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                 IsSelectedRoute.Value = !IsSelectedRoute.Value;
                 onSelect?.Invoke(party, IsSelectedRoute.Value);
             });
+            
+            UpdateParty(party);
+        }
+
+        public void UpdateParty(UserParty party)
+        {
+            PartyUnits.Clear();
+            PartyUnits.AddRange(party.UserUnits.Select(x => new UserUnitViewModel(x)));
+            
+            IsShowExpandCommentButton.Value = party.Comment?.GetLineCount() <= 1 ? Visibility.Collapsed : Visibility.Visible;
+            
+            Comment.Value = party.Comment?.GetFirstLine() ?? string.Empty;
+
+            EstimateDamage.Value = party.EstimateDamage;
         }
 
         private void DeleteParty(UserParty party)

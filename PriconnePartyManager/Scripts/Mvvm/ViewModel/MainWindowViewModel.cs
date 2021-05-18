@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using PriconnePartyManager.Scripts.Common;
 using PriconnePartyManager.Scripts.DataModel;
+using PriconnePartyManager.Scripts.Extensions;
 using PriconnePartyManager.Scripts.Mvvm.Common;
 using PriconnePartyManager.Windows;
 using Reactive.Bindings;
@@ -13,21 +14,22 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
 {
     public class MainWindowViewModel : BindingBase
     {
-        public ReadOnlyReactiveCollection<PartyListElementViewModel> UserParties { get; private set; }
+        public ReactiveCollection<PartyListElementViewModel> UserParties { get; private set; }
         
         public ReactiveCollection<AttackRouteListElementViewModel> AttackParties { get; }
         public ReactiveCommand AddParty { get; } = new ReactiveCommand();
 
         public ReactiveCommand ImportParty { get; } = new ReactiveCommand();
         
-        private readonly ObservableCollection<UserParty> m_PartyUnitsCollection;
-        private readonly ObservableCollection<UserParty> m_AttackPartyCollection;
+        //private readonly ObservableCollection<UserParty> m_PartyUnitsCollection;
         private Dictionary<int, int> m_DoublingCheckTable = new Dictionary<int, int>();
 
         public MainWindowViewModel()
         {
-            m_PartyUnitsCollection = new ObservableCollection<UserParty>(Database.I.UserParties);
-            UserParties = m_PartyUnitsCollection.ToReadOnlyReactiveCollection(x => new PartyListElementViewModel(x, OnSelectAttackRoute));
+            //m_PartyUnitsCollection = new ObservableCollection<UserParty>(Database.I.UserParties);
+            //UserParties = m_PartyUnitsCollection.ToReadOnlyReactiveCollection(x => new PartyListElementViewModel(x, OnSelectAttackRoute));
+            UserParties = new ReactiveCollection<PartyListElementViewModel>();
+            UserParties.AddRange(Database.I.UserParties.Select(x => new PartyListElementViewModel(x, OnSelectAttackRoute)));
             
             AttackParties = new ReactiveCollection<AttackRouteListElementViewModel>();
 
@@ -57,19 +59,32 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
 
         private void OnAddParty(UserParty party)
         {
-            m_PartyUnitsCollection.Add(party);
+            UserParties.Add(new PartyListElementViewModel(party, OnSelectAttackRoute));
         }
 
         private void OnChangePaty(UserParty party)
         {
-            var collection = m_PartyUnitsCollection.ToList();
-            var index = m_PartyUnitsCollection.ToList().FindIndex(x => x.Id == party.Id);
-            m_PartyUnitsCollection[index] = party;
+            var userPartyIndex = UserParties.ToList().FindIndex(x => x.Id == party.Id);
+            if (userPartyIndex >= 0)
+            {
+                UserParties[userPartyIndex].UpdateParty(party);
+            }
+            
+            var attackRouteIndex = AttackParties.ToList().FindIndex(x => x.Id == party.Id);
+            if (attackRouteIndex >= 0)
+            {
+                AttackParties[attackRouteIndex].UpdateParty(party);
+                CheckDoubling();
+            }
         }
 
         private void OnRemoveParty(UserParty party)
         {
-            m_PartyUnitsCollection.Remove(party);
+            var userPartyIndex = UserParties.ToList().FindIndex(x => x.Id == party.Id);
+            if (userPartyIndex >= 0)
+            {
+                UserParties.RemoveAt(userPartyIndex);
+            }
         }
 
         private void OnSelectAttackRoute(UserParty party, bool isSelect)
@@ -116,6 +131,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
 
         private void CheckDoubling()
         {
+            //キャラ重複チェック
             m_DoublingCheckTable.Clear();
             foreach (var attackParty in AttackParties)
             {
@@ -147,6 +163,23 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                         continue;
                     }
                     userUnitViewModel.IsDoubling.Value = doublingIds.Contains(userUnitViewModel.UserUnit.UnitId);
+                }
+            }
+            
+            //サポキャラ重複チェック
+            foreach (var attackPartyViewModel in AttackParties)
+            {
+                var supportIds = attackPartyViewModel.PartyUnits.Where(x => x.IsSupport.Value).Select(x => x.UserUnit.UnitId).ToArray();
+                if (supportIds.Length < 2)
+                {
+                    continue;
+                }
+                foreach (var userUnitViewModel in attackPartyViewModel.PartyUnits)
+                {
+                    if (userUnitViewModel.UserUnit.IsSupport)
+                    {
+                        userUnitViewModel.IsDoublingSupport.Value = supportIds.Contains(userUnitViewModel.UserUnit.UnitId);
+                    }
                 }
             }
         }

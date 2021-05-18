@@ -20,7 +20,12 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReactiveProperty<string> RankView { get; }
         public ReactiveProperty<Visibility> IsShowRank { get; }
         public ReactiveProperty<UnitRarity> Rarity { get; }
+        
+        /// <summary>キャラ重複しているか </summary>
         public ReactiveProperty<bool> IsDoubling { get; }
+        
+        /// <summary>同一編成内にサポキャラが複数いるか </summary>
+        public ReactiveProperty<bool> IsDoublingSupport { get; }
 
         public UserUnitViewModel(UserUnit userUnit)
         {
@@ -32,6 +37,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             IsShowRank = new ReactiveProperty<Visibility>();
             Rarity = new ReactiveProperty<UnitRarity>(UserUnit.Rarity);
             IsDoubling = new ReactiveProperty<bool>(false);
+            IsDoublingSupport = new ReactiveProperty<bool>(false);
 
             IsSupport.Subscribe(x => UserUnit.IsSupport = x);
             Rank.Subscribe(x =>
