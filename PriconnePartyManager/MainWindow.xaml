@@ -141,21 +141,21 @@
                                                                     <!-- サムネ中身 -->
                                                                     <Grid>
                                                                         <Grid.RowDefinitions>
-                                                                            <RowDefinition Height="*"/>
+                                                                            <RowDefinition Height="Auto"/>
                                                                             <RowDefinition Height="Auto"/>
                                                                             <RowDefinition Height="Auto"/>
                                                                         </Grid.RowDefinitions>
                                                                         <Grid Row="0" VerticalAlignment="Top">
                                                                             <!-- サムネ -->
-                                                                            <Image Source="{Binding Icon.Value}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                            <Image Source="{Binding Icon.Value}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
                                                                             <!-- サポートか -->
-                                                                            <Image Source="{Binding IsSupport.Value, Converter={StaticResource SupportFlagToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                            <Image Source="{Binding IsSupport.Value, Converter={StaticResource SupportFlagToImageSourceConverter}}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
                                                                             <!-- 枠 -->
-                                                                            <Image Source="{Binding Rank.Value, Converter={StaticResource RankToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                            <Image Source="{Binding Rank.Value, Converter={StaticResource RankToImageSourceConverter}}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
                                                                             <!-- ★ -->
-                                                                            <Image Source="{Binding Rarity.Value, Converter={StaticResource RarityToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                            <Image Source="{Binding Rarity.Value, Converter={StaticResource RarityToImageSourceConverter}}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
                                                                         </Grid>
-                                                                        <Grid Row="1">
+                                                                        <Grid Row="1" VerticalAlignment="Top">
                                                                             <TextBlock Text="{Binding RankView.Value}" Visibility="{Binding IsShowRank.Value}" TextAlignment="Center" Foreground="Black" Margin="0,0,0,5" FontSize="11"/>
                                                                         </Grid>
                                                                         <Grid Row="2" VerticalAlignment="Bottom">
@@ -165,7 +165,7 @@
                                                                                     <Style TargetType="Border">
                                                                                         <Style.Triggers>
                                                                                             <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
-                                                                                                <Setter Property="Background" Value="Tomato"/>
+                                                                                                <Setter Property="Background" Value="Crimson"/>
                                                                                             </DataTrigger>
                                                                                         </Style.Triggers>
                                                                                     </Style>
@@ -189,7 +189,7 @@
                                                                         <Style TargetType="Border">
                                                                             <Style.Triggers>
                                                                                 <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
-                                                                                    <Setter Property="BorderBrush" Value="Tomato"/>
+                                                                                    <Setter Property="BorderBrush" Value="Crimson"/>
                                                                                 </DataTrigger>
                                                                                 <DataTrigger Binding="{Binding IsDoubling.Value}" Value="False">
                                                                                     <Setter Property="BorderBrush" Value="White"/>
