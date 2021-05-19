@@ -31,7 +31,7 @@ namespace PriconnePartyManager.Scripts.DataModel
 
         public UserParty(IEnumerable<UserUnit> userUnits, string comment = null, string estimateDamage = null)
         {
-            UserUnits = userUnits;
+            UserUnits = userUnits.Select(x => new UserUnit(x));
             Comment = comment;
             EstimateDamage = estimateDamage;
             Id = GenerateId();

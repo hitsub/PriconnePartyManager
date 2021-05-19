@@ -45,5 +45,14 @@ namespace PriconnePartyManager.Scripts.DataModel
             m_Unit = unit;
             UnitId = m_Unit.Id;
         }
+
+        public UserUnit(UserUnit userUnit)
+        {
+            m_Unit = userUnit.Unit;
+            UnitId = m_Unit.Id;
+            Rarity = userUnit.Rarity;
+            Rank = userUnit.Rank;
+            IsSupport = userUnit.IsSupport;
+        }
     }
 }
