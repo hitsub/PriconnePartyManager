@@ -12,9 +12,9 @@ namespace PriconnePartyManager.Scripts.Utils
     public class IconDownloader
     {
         private const int RarityCoefficient = 10;
-        private const string Url = "https://redive.estertion.win/icon/unit/{0}.webp";
+        private const string Url = "http://hitsub.net/icon/unit/{0}.webp";
         private const string DownloadLocation = "./data/icons/";
-        private const int MaxDownload = 50;
+        private const int MaxDownload = 250;
 
         public void DownloadIcons()
         {
@@ -26,6 +26,7 @@ namespace PriconnePartyManager.Scripts.Utils
 
             var count = 0;
             var downloadCount = 0;
+            var existCount = 0;
             foreach (var id in ids)
             {
                 if (count > MaxDownload)
@@ -35,6 +36,7 @@ namespace PriconnePartyManager.Scripts.Utils
                 }
                 if (!playables.Contains(id))
                 {
+                    existCount++;
                     continue;
                 }
                 var isUnlockRarity6 = rarity6Ids.Contains(id);
@@ -43,12 +45,14 @@ namespace PriconnePartyManager.Scripts.Utils
                 //既にあればスルーする
                 if (File.Exists($"{DownloadLocation}{name}.png"))
                 {
+                    existCount++;
                     continue;
                 }
                 //未変換だったら変換だけする
                 if (File.Exists($"{DownloadLocation}{name}.webp"))
                 {
                     ConvertWebpToPng(name);
+                    existCount++;
                     continue;
                 }
                 
@@ -67,6 +71,11 @@ namespace PriconnePartyManager.Scripts.Utils
                 
                 count++;
                 downloadCount++;
+            }
+
+            if (existCount == ids.Length)
+            {
+                MessageBox.Show("キャラアイコンはすべて揃っています。\n不足している場合、先にデータベースの更新を行ってください。");
             }
         }
 
