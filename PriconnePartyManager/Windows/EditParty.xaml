@@ -11,7 +11,7 @@
         xmlns:enum="clr-namespace:PriconnePartyManager.Scripts.Enum"
         xmlns:controls="clr-namespace:PriconnePartyManager.Controls"
         mc:Ignorable="d"
-        Title="EditParty" Height="550" Width="835">
+        Title="パーティ編集" Height="550" Width="835">
     <Window.Resources>
         <xaml:RadioButtonConverter x:Key="EnumConverter" />
     </Window.Resources>

@@ -19,6 +19,8 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReactiveCollection<AttackRouteListElementViewModel> AttackParties { get; }
         
         public ReactiveProperty<string> AttackRouteComment { get; }
+        
+        public ReactiveProperty<string> CurrentRouteId { get; }
 
         public ReactiveCommand AddParty { get; } = new ReactiveCommand();
 
@@ -42,6 +44,8 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             AttackParties = new ReactiveCollection<AttackRouteListElementViewModel>();
             
             AttackRouteComment = new ReactiveProperty<string>();
+            
+            CurrentRouteId = new ReactiveProperty<string>();
 
             AddParty.Subscribe(() =>
             {
@@ -56,6 +60,11 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
 
             SaveRoute.Subscribe(SaveAttackRoute);
             NewRoute.Subscribe(CreateNewAttackRoute);
+            OpenRoute.Subscribe(() =>
+            {
+                var openRouteWindow = new OpenAttackRoute(OpenAttackRoute);
+                openRouteWindow.Show();
+            });
 
             Database.I.OnAddUserParty += OnAddUserParty;
             Database.I.OnChangeUserParty += OnChangeUserParty;
@@ -99,6 +108,28 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             }
         }
 
+        private void OpenAttackRoute(UserAttackRoute route)
+        {
+            if (m_CurrentAttackRoute != null || AttackParties.Count > 0)
+            {
+                var res = MessageBox.Show("未保存の凸ルートは破棄されます。よろしいですか？", "確認", MessageBoxButton.OKCancel);
+                if (res == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
+            m_CurrentAttackRoute = route;
+            CurrentRouteId.Value = route.Id;
+            AttackRouteComment.Value = route.Comment ?? string.Empty;
+            AttackParties.Clear();
+            AttackParties.AddRange(route.RouteParties.Select(x => new AttackRouteListElementViewModel(x, OnUnSelectAttackRoute)));
+            var routeIds = route.RouteParties.Select(x => x.Id).ToArray();
+            foreach (var vm in UserParties)
+            {
+                vm.IsSelectedRoute.Value = routeIds.Contains(vm.Id);
+            }
+        }
+
         private void SaveAttackRoute()
         {
             if (AttackParties.Count == 0)
@@ -108,7 +139,8 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             }
             if (m_CurrentAttackRoute == null)
             {
-                m_CurrentAttackRoute = new UserAttackRoute(AttackParties.Select(x => x.Party), AttackRouteComment.Value);
+                m_CurrentAttackRoute = new UserAttackRoute(AttackParties.ToArray().Select(x => x.Party), AttackRouteComment.Value);
+                CurrentRouteId.Value = m_CurrentAttackRoute.Id;
             }
             else
             {
@@ -131,6 +163,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
 
             AttackParties.Clear();
             m_CurrentAttackRoute = null;
+            CurrentRouteId.Value = string.Empty;
             AttackRouteComment.Value = string.Empty;
             foreach (var vm in UserParties)
             {

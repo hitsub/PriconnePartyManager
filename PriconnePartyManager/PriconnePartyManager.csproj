@@ -82,11 +82,18 @@
       <Generator></Generator>
       <XamlRuntime>Wpf</XamlRuntime>
     </Page>
+    <Page Update="Windows\OpenAttackRoute.xaml">
+      <Generator></Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Windows\ImportParty.xaml.cs">
       <DependentUpon>ImportParty.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Windows\OpenAttackRoute.xaml.cs">
+      <DependentUpon>OpenAttackRoute.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 

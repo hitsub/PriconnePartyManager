@@ -10,8 +10,9 @@
         xmlns:vm="clr-namespace:PriconnePartyManager.Scripts.Mvvm.ViewModel"
         xmlns:enum="clr-namespace:PriconnePartyManager.Scripts.Enum"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
-        Title="MainWindow" Height="750" Width="1200">
+        Title="RouteChecker" Height="750" Width="1200">
     <Window.Resources>
         <xaml:RarityToImageSourceConverter x:Key="RarityToImageSourceConverter"/>
         <xaml:RankToImageSourceConverter x:Key="RankToImageSourceConverter"/>
@@ -56,7 +57,21 @@
                     <Button Height="Auto" Margin="5,5,5,5" Command="{Binding SaveRoute}">
                         <StackPanel Orientation="Horizontal" Margin="15,3,15,3">
                             <fa:ImageAwesome Icon="Save" Width="15"/>
-                            <TextBlock Text="保存" FontSize="14" Margin="3,0,0,0"/>
+                            <TextBlock FontSize="14" Margin="3,0,0,0">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Text" Value="上書き保存"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding CurrentRouteId.Value}" Value="{x:Static sys:String.Empty}">
+                                                <Setter Property="Text" Value="保存"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding CurrentRouteId.Value}" Value="{x:Null}">
+                                                <Setter Property="Text" Value="保存"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
                         </StackPanel>
                     </Button>
                 </StackPanel>
