@@ -26,10 +26,13 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReactiveCommand OnUnSelect { get; set; } = new ReactiveCommand();
         
         public string Id { get; }
+        
+        public UserParty Party { get; private set; }
 
         public AttackRouteListElementViewModel(UserParty party, Action<UserParty> onUnSelect)
         {
             Id = party.Id;
+            Party = party;
             PartyUnits = new ReactiveCollection<UserUnitViewModel>();
 
             IsExpandComment.Subscribe(x =>
@@ -54,6 +57,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
 
         public void UpdateParty(UserParty party)
         {
+            Party = party;
             PartyUnits.Clear();
             PartyUnits.AddRange(party.UserUnits.Select(x => new UserUnitViewModel(x)));
             Comment.Value = party.Comment?.GetFirstLine() ?? string.Empty;

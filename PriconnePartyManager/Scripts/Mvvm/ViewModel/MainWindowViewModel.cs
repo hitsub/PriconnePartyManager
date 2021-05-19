@@ -17,52 +17,64 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReactiveCollection<PartyListElementViewModel> UserParties { get; private set; }
         
         public ReactiveCollection<AttackRouteListElementViewModel> AttackParties { get; }
+        
+        public ReactiveProperty<string> AttackRouteComment { get; }
+
         public ReactiveCommand AddParty { get; } = new ReactiveCommand();
 
         public ReactiveCommand ImportParty { get; } = new ReactiveCommand();
         
-        //private readonly ObservableCollection<UserParty> m_PartyUnitsCollection;
+        public ReactiveCommand SaveRoute { get; } = new ReactiveCommand();
+        
+        public ReactiveCommand NewRoute { get; } = new ReactiveCommand();
+        
+        public ReactiveCommand OpenRoute { get; } = new ReactiveCommand();
+        
         private Dictionary<int, int> m_DoublingCheckTable = new Dictionary<int, int>();
+
+        private UserAttackRoute m_CurrentAttackRoute = null;
 
         public MainWindowViewModel()
         {
-            //m_PartyUnitsCollection = new ObservableCollection<UserParty>(Database.I.UserParties);
-            //UserParties = m_PartyUnitsCollection.ToReadOnlyReactiveCollection(x => new PartyListElementViewModel(x, OnSelectAttackRoute));
             UserParties = new ReactiveCollection<PartyListElementViewModel>();
             UserParties.AddRange(Database.I.UserParties.Select(x => new PartyListElementViewModel(x, OnSelectAttackRoute)));
             
             AttackParties = new ReactiveCollection<AttackRouteListElementViewModel>();
+            
+            AttackRouteComment = new ReactiveProperty<string>();
 
             AddParty.Subscribe(() =>
             {
                 var editWindow = new EditParty();
                 editWindow.Show();
             });
-
             ImportParty.Subscribe(() =>
             {
                 var importWindow = new ImportParty();
                 importWindow.Show();
             });
 
-            Database.I.OnAddUserParty += OnAddParty;
-            Database.I.OnChangeUserParty += OnChangePaty;
-            Database.I.OnRemoveUserParty += OnRemoveParty;
+            SaveRoute.Subscribe(SaveAttackRoute);
+            NewRoute.Subscribe(CreateNewAttackRoute);
+
+            Database.I.OnAddUserParty += OnAddUserParty;
+            Database.I.OnChangeUserParty += OnChangeUserParty;
+            Database.I.OnRemoveUserParty += OnRemoveUserParty;
         }
 
         ~MainWindowViewModel()
         {
-            Database.I.OnAddUserParty -= OnAddParty;
-            Database.I.OnChangeUserParty -= OnChangePaty;
-            Database.I.OnRemoveUserParty -= OnRemoveParty;
+            Database.I.OnAddUserParty -= OnAddUserParty;
+            Database.I.OnChangeUserParty -= OnChangeUserParty;
+            Database.I.OnRemoveUserParty -= OnRemoveUserParty;
         }
 
-        private void OnAddParty(UserParty party)
+        private void OnAddUserParty(UserParty party)
         {
             UserParties.Add(new PartyListElementViewModel(party, OnSelectAttackRoute));
         }
 
-        private void OnChangePaty(UserParty party)
+        private void OnChangeUserParty(UserParty party)
         {
             var userPartyIndex = UserParties.ToList().FindIndex(x => x.Id == party.Id);
             if (userPartyIndex >= 0)
@@ -78,12 +90,51 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             }
         }
 
-        private void OnRemoveParty(UserParty party)
+        private void OnRemoveUserParty(UserParty party)
         {
             var userPartyIndex = UserParties.ToList().FindIndex(x => x.Id == party.Id);
             if (userPartyIndex >= 0)
             {
                 UserParties.RemoveAt(userPartyIndex);
+            }
+        }
+
+        private void SaveAttackRoute()
+        {
+            if (AttackParties.Count == 0)
+            {
+                MessageBox.Show("凸ルートを編成してください");
+                return;
+            }
+            if (m_CurrentAttackRoute == null)
+            {
+                m_CurrentAttackRoute = new UserAttackRoute(AttackParties.Select(x => x.Party), AttackRouteComment.Value);
+            }
+            else
+            {
+                m_CurrentAttackRoute.Save(AttackParties.Select(x => x.Party), AttackRouteComment.Value);
+            }
+            Database.I.SaveAttackRoute(m_CurrentAttackRoute);
+            MessageBox.Show("保存しました");
+        }
+
+        private void CreateNewAttackRoute()
+        {
+            if (m_CurrentAttackRoute != null || AttackParties.Count > 0)
+            {
+                var res = MessageBox.Show("未保存の凸ルートは破棄されます。よろしいですか？", "確認", MessageBoxButton.OKCancel);
+                if (res == MessageBoxResult.Cancel)
+                {
+                    return;
+                }
+            }
+
+            AttackParties.Clear();
+            m_CurrentAttackRoute = null;
+            AttackRouteComment.Value = string.Empty;
+            foreach (var vm in UserParties)
+            {
+                vm.IsSelectedRoute.Value = false;
             }
         }
 

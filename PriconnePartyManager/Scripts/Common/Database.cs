@@ -14,6 +14,8 @@ namespace PriconnePartyManager.Scripts.Common
     {
         public Unit[] Units { get; private set; }
         public List<UserParty> UserParties { get; private set; }
+        
+        public List<UserAttackRoute> UserAttackRoutes { get; private set; }
 
         private int[] m_UnlockRarity6UnitIds;
         private int[] m_PlayableUnitIds;
@@ -22,8 +24,11 @@ namespace PriconnePartyManager.Scripts.Common
 
         public event Action<UserParty> OnAddUserParty;
         public event Action<UserParty> OnRemoveUserParty;
-
         public event Action<UserParty> OnChangeUserParty;
+
+        public event Action<UserAttackRoute> OnAddUserAttackRoute;
+        public event Action<UserAttackRoute> OnRemoveUserAttackRoute;
+        public event Action<UserAttackRoute> OnChangeUserAttackRoute;
             
         public Database()
         {
@@ -48,6 +53,7 @@ namespace PriconnePartyManager.Scripts.Common
             
             CreateUnits();
             LoadParties();
+            LoadAttackRoutes();
         }
 
         private void CreateUnits()
@@ -79,6 +85,16 @@ namespace PriconnePartyManager.Scripts.Common
             }
         }
 
+        private void LoadAttackRoutes()
+        {
+            UserAttackRoutes = new List<UserAttackRoute>();
+            var exists = FileManager.I.LoadJson<UserAttackRoute[]>();
+            if (exists?.Length > 0)
+            {
+                UserAttackRoutes.AddRange(exists);
+            }
+        }
+
         public void SaveParty(UserParty party)
         {
             if (UserParties.Contains(party))
@@ -106,6 +122,35 @@ namespace PriconnePartyManager.Scripts.Common
             UserParties.Remove(party);
             OnRemoveUserParty?.Invoke(party);
             FileManager.I.SaveJson(UserParties.ToArray());
+        }
+
+        public void AddAttackRoute(UserAttackRoute route)
+        {
+            UserAttackRoutes.Add(route);
+            OnAddUserAttackRoute?.Invoke(route);
+            FileManager.I.SaveJson(UserAttackRoutes.ToArray());
+        }
+
+        public void RemoveAttackRoute(UserAttackRoute route)
+        {
+            UserAttackRoutes.Remove(route);
+            OnRemoveUserAttackRoute?.Invoke(route);
+            FileManager.I.SaveJson(UserAttackRoutes.ToArray());
+        }
+
+        public void SaveAttackRoute(UserAttackRoute route)
+        {
+            if (UserAttackRoutes.Contains(route))
+            {
+                var index = UserAttackRoutes.FindIndex(x => x.Id == route.Id);
+                UserAttackRoutes[index] = route;
+                OnChangeUserAttackRoute?.Invoke(route);
+                FileManager.I.SaveJson(UserAttackRoutes.ToArray());
+            }
+            else
+            {
+                AddAttackRoute(route);
+            }
         }
         
     }
