@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Windows;
 using PriconnePartyManager.Scripts.DataModel;
 using PriconnePartyManager.Scripts.Sql;
 using PriconnePartyManager.Scripts.Sql.Model;
@@ -12,6 +15,10 @@ namespace PriconnePartyManager.Scripts.Common
     /// </summary>
     public class Database : Singleton<Database>
     {
+        private const string RediveUrl = "https://redive.estertion.win/";
+        private const string RediveJsonName = "last_version_jp.json";
+        private const string RediveDatabaseName = "redive_jp.db";
+        
         public Unit[] Units { get; private set; }
         public List<UserParty> UserParties { get; private set; }
         
@@ -78,7 +85,7 @@ namespace PriconnePartyManager.Scripts.Common
         private void LoadParties()
         {
             UserParties = new List<UserParty>();
-            var exists = FileManager.I.LoadJson<UserParty[]>();
+            var exists = FileManager.I.LoadJsonFromFile<UserParty[]>();
             if (exists?.Length > 0)
             {
                 UserParties.AddRange(exists);
@@ -88,7 +95,7 @@ namespace PriconnePartyManager.Scripts.Common
         private void LoadAttackRoutes()
         {
             UserAttackRoutes = new List<UserAttackRoute>();
-            var exists = FileManager.I.LoadJson<UserAttackRoute[]>();
+            var exists = FileManager.I.LoadJsonFromFile<UserAttackRoute[]>();
             if (exists?.Length > 0)
             {
                 UserAttackRoutes.AddRange(exists);
@@ -151,6 +158,60 @@ namespace PriconnePartyManager.Scripts.Common
             {
                 AddAttackRoute(route);
             }
+        }
+
+        public void UpdateDatabase()
+        {
+            const string path = "./data/last_version_jp.json";
+            RediveVersionData currentVersion = null;
+            if (File.Exists(path))
+            {
+                currentVersion = FileManager.I.LoadJsonFromFile<RediveVersionData>(path);
+            }
+            
+            var webClient = new WebClient();
+            string updateRediveString;
+            
+            try
+            {
+                updateRediveString = webClient.DownloadString(RediveUrl + RediveJsonName);
+            }
+            catch
+            {
+                MessageBox.Show("Databaseのバージョン情報の取得に失敗しました。");
+                return;
+            }
+            if (string.IsNullOrEmpty(updateRediveString))
+            {
+                MessageBox.Show("Databaseのバージョン情報の取得に失敗しました。");
+                return;
+            }
+
+            var latestVersion = FileManager.I.LoadJson<RediveVersionData>(updateRediveString);
+
+            if (latestVersion.TruthVersion == currentVersion?.TruthVersion)
+            {
+                MessageBox.Show("Databaseは最新版です。");
+                return;
+            }
+            
+            var databaseUrl = RediveUrl + "db/" + RediveDatabaseName + ".br";
+            var databaseBrotliSavePath = Path.Combine("data", RediveDatabaseName + ".br");
+            var databaseSavePath = Path.Combine("data", RediveDatabaseName);
+
+            try
+            {
+                webClient.DownloadFile(databaseUrl, databaseBrotliSavePath);
+            }
+            catch
+            {
+                MessageBox.Show("Databaseの取得に失敗しました。");
+                return;
+            }
+            FileManager.I.DecompressBrotli(databaseBrotliSavePath, databaseSavePath, true);
+            File.WriteAllText(path, updateRediveString);
+            
+            InitializeDatabase();
         }
         
     }

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Windows;
 using Imazen.WebP;
 using PriconnePartyManager.Scripts.Sql;
 
@@ -23,10 +25,12 @@ namespace PriconnePartyManager.Scripts.Utils
             sql.Dispose();
 
             var count = 0;
+            var downloadCount = 0;
             foreach (var id in ids)
             {
                 if (count > MaxDownload)
                 {
+                    MessageBox.Show("不足アイコンが一定数に達したため、中断されました。\n再度更新を行ってください。");
                     break;
                 }
                 if (!playables.Contains(id))
@@ -53,10 +57,16 @@ namespace PriconnePartyManager.Scripts.Utils
                 {
                     ConvertWebpToPng(name);
                     File.Delete($"{DownloadLocation}{name}.webp");
+                    downloadCount--;
+                    if (downloadCount == 0)
+                    {
+                        MessageBox.Show("キャラアイコンの更新が終わりました。このソフトを再起動してください。");
+                    }
                 };
                 webClient.DownloadFileAsync(new Uri(string.Format(Url, name)), $"{DownloadLocation}{name}.webp");
                 
                 count++;
+                downloadCount++;
             }
         }
 
@@ -66,9 +76,9 @@ namespace PriconnePartyManager.Scripts.Utils
             var decoder = new SimpleDecoder();
             var bytes = new byte[stream.Length];
             stream.Read(bytes, 0, bytes.Length);
-            //var bmp = decoder.DecodeFromBytes(bytes, bytes.Length);
-            //bmp.Save($"{DownloadLocation}{name}.png", ImageFormat.Png);
-            //bmp.Dispose();
+            var bmp = decoder.DecodeFromBytes(bytes, bytes.Length);
+            bmp.Save($"{DownloadLocation}{name}.png", ImageFormat.Png);
+            bmp.Dispose();
             stream.Dispose();
 
             if (isDeleteInputFile)

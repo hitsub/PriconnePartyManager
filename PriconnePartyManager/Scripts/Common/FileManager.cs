@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using PriconnePartyManager.Scripts.DataModel;
+using PriconnePartyManager.Scripts.Utils;
 
 namespace PriconnePartyManager.Scripts.Common
 {
@@ -10,19 +12,27 @@ namespace PriconnePartyManager.Scripts.Common
     {
         private const string FileNameUserParties = "./data/save/{0}.json";
 
-        public T LoadJson<T>()
+        public T LoadJsonFromFile<T>(string path = null)
         {
-            var fileName = string.Format(FileNameUserParties, typeof(T));
-            if (!File.Exists(fileName))
+            if (string.IsNullOrEmpty(path))
+            {
+                path = string.Format(FileNameUserParties, typeof(T));
+            }
+            if (!File.Exists(path))
             {
                 return default;
             }
-            var json = File.ReadAllText(fileName);
+            var json = File.ReadAllText(path);
             if (string.IsNullOrEmpty(json))
             {
                 return default;
             }
 
+            return LoadJson<T>(json);
+        }
+
+        public T LoadJson<T>(string json)
+        {
             var options = new JsonSerializerOptions
             {
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -34,7 +44,7 @@ namespace PriconnePartyManager.Scripts.Common
             return instance;
         }
 
-        public void SaveJson<T>(T data)
+        public void SaveJson<T>(T data, string path = null)
         {
             var options = new JsonSerializerOptions
             {
@@ -43,17 +53,66 @@ namespace PriconnePartyManager.Scripts.Common
                 PropertyNameCaseInsensitive = true,
             };
             var json = JsonSerializer.Serialize(data, options);
-            var fileName = string.Format(FileNameUserParties, typeof(T));
-            if (!File.Exists(fileName))
+            if (string.IsNullOrEmpty(path))
             {
-                var dirName = Path.GetDirectoryName(fileName);
+                path = string.Format(FileNameUserParties, typeof(T));
+            }
+            if (!File.Exists(path))
+            {
+                var dirName = Path.GetDirectoryName(path);
                 if (!File.Exists(dirName))
                 {
                     Directory.CreateDirectory(dirName);
                 }
-                File.Create(fileName);
+                File.Create(path);
             }
-            File.WriteAllText(fileName, json);
+            File.WriteAllText(path, json);
+        }
+        
+        
+        /// <summary>
+        /// Brotli形式の解凍
+        /// </summary>
+        public bool DecompressBrotli(string preDecompressFilePath, string decompressedFilePath, bool deleteFromFile = false)
+        {
+            try
+            {
+                using var preDecompressFile = new FileStream(
+                    preDecompressFilePath,
+                    FileMode.Open,
+                    FileAccess.Read
+                );
+
+                using var decompressedFile = new FileStream(
+                    decompressedFilePath,
+                    FileMode.Create,
+                    FileAccess.Write
+                );
+
+                using var bs = new BrotliStream(preDecompressFile, CompressionMode.Decompress);
+                bs.CopyTo(decompressedFile);
+                
+                preDecompressFile.Close();
+                decompressedFile.Close();
+                bs.Close();
+
+                if (deleteFromFile)
+                {
+                    File.Delete(preDecompressFilePath);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public void UpdateUnitIcons()
+        {
+            var downloader = new IconDownloader();
+            downloader.DownloadIcons();
         }
     }
 }

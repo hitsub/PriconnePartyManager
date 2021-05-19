@@ -31,6 +31,10 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReactiveCommand NewRoute { get; } = new ReactiveCommand();
         
         public ReactiveCommand OpenRoute { get; } = new ReactiveCommand();
+
+        public ReactiveCommand UpdateDatabase { get; } = new ReactiveCommand();
+        
+        public ReactiveCommand UpdateUnitIcons { get; } = new ReactiveCommand();
         
         private Dictionary<int, int> m_DoublingCheckTable = new Dictionary<int, int>();
 
@@ -64,6 +68,16 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             {
                 var openRouteWindow = new OpenAttackRoute(OpenAttackRoute);
                 openRouteWindow.Show();
+            });
+
+            UpdateDatabase.Subscribe(() =>
+            {
+                Database.I.UpdateDatabase();
+            });
+
+            UpdateUnitIcons.Subscribe(() =>
+            {
+                FileManager.I.UpdateUnitIcons();
             });
 
             Database.I.OnAddUserParty += OnAddUserParty;

@@ -22,103 +22,118 @@
         <xaml:SelectFlagToColorBrushConverter x:Key="SelectFlagToColorBrushConverter"/>
     </Window.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid Row="0">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Border Background="RoyalBlue" CornerRadius="0,0,10,10">
-                        <TextBlock Text="凸ルート" Foreground="WhiteSmoke" FontSize="15" FontWeight="Bold" Margin="25,5,25,5"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Row="0">
+            <DockPanel>
+                <Menu DockPanel.Dock="Top">
+                    <MenuItem Header="データベース">
+                        <MenuItem Header="データベース更新" Command="{Binding UpdateDatabase}"/>
+                        <MenuItem Header="キャラアイコン更新" Command="{Binding UpdateUnitIcons}"/>
+                    </MenuItem>
+                </Menu>
+            </DockPanel>
+        </Grid>
+        <Grid Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Row="0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Border Background="RoyalBlue" CornerRadius="0,0,10,10">
+                            <TextBlock Text="凸ルート" Foreground="WhiteSmoke" FontSize="15" FontWeight="Bold" Margin="25,5,25,5"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+                <Grid Row="1">
+                    <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                        <Button Height="Auto" Margin="5,5,5,5" Command="{Binding NewRoute}">
+                            <StackPanel Orientation="Horizontal" Margin="15,3,15,3">
+                                <fa:ImageAwesome Icon="PlusCircle" Width="15"/>
+                                <TextBlock Text="新規" FontSize="14" Margin="3,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Height="Auto" Margin="5,5,5,5" Command="{Binding OpenRoute}">
+                            <StackPanel Orientation="Horizontal" Margin="15,3,15,3">
+                                <fa:ImageAwesome Icon="FolderOpen" Width="15"/>
+                                <TextBlock Text="開く" FontSize="14" Margin="3,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Height="Auto" Margin="5,5,5,5" Command="{Binding SaveRoute}">
+                            <StackPanel Orientation="Horizontal" Margin="15,3,15,3">
+                                <fa:ImageAwesome Icon="Save" Width="15"/>
+                                <TextBlock FontSize="14" Margin="3,0,0,0">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="上書き保存"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding CurrentRouteId.Value}" Value="{x:Static sys:String.Empty}">
+                                                    <Setter Property="Text" Value="保存"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding CurrentRouteId.Value}" Value="{x:Null}">
+                                                    <Setter Property="Text" Value="保存"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <Grid Row="2">
+                    <Border Margin="5,10,5,10" BorderThickness="2" BorderBrush="LightSlateGray" CornerRadius="2">
+                        <Grid Height="30">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Column="0">
+                                <TextBlock Text="タイトル" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                            </Grid>
+                            <Grid Column="1" Background="LightSlateGray" Width="2"/>
+                            <Grid Column="2">
+                                <TextBox Text="{Binding AttackRouteComment.Value}" BorderThickness="0" VerticalContentAlignment="Center">
+                                    <TextBox.Style>
+                                        <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
+                                            <Style.Resources>
+                                                <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Top" Stretch="None">
+                                                    <VisualBrush.Visual>
+                                                        <Label Content="タイトルや備考などを入力(空欄可)" Foreground="Gray" VerticalContentAlignment="Center"/>
+                                                    </VisualBrush.Visual>
+                                                </VisualBrush>
+                                            </Style.Resources>
+                                            <Style.Triggers>
+                                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="Text" Value="{x:Null}">
+                                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                                    <Setter Property="Background" Value="White" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBox.Style>
+                                </TextBox>
+                            </Grid>
+                        </Grid>
                     </Border>
-                </StackPanel>
-            </Grid>
-            <Grid Row="1">
-                <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
-                    <Button Height="Auto" Margin="5,5,5,5" Command="{Binding NewRoute}">
-                        <StackPanel Orientation="Horizontal" Margin="15,3,15,3">
-                            <fa:ImageAwesome Icon="PlusCircle" Width="15"/>
-                            <TextBlock Text="新規" FontSize="14" Margin="3,0,0,0"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Height="Auto" Margin="5,5,5,5" Command="{Binding OpenRoute}">
-                        <StackPanel Orientation="Horizontal" Margin="15,3,15,3">
-                            <fa:ImageAwesome Icon="FolderOpen" Width="15"/>
-                            <TextBlock Text="開く" FontSize="14" Margin="3,0,0,0"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Height="Auto" Margin="5,5,5,5" Command="{Binding SaveRoute}">
-                        <StackPanel Orientation="Horizontal" Margin="15,3,15,3">
-                            <fa:ImageAwesome Icon="Save" Width="15"/>
-                            <TextBlock FontSize="14" Margin="3,0,0,0">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Text" Value="上書き保存"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding CurrentRouteId.Value}" Value="{x:Static sys:String.Empty}">
-                                                <Setter Property="Text" Value="保存"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding CurrentRouteId.Value}" Value="{x:Null}">
-                                                <Setter Property="Text" Value="保存"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
-            </Grid>
-            <Grid Row="2">
-                <Border Margin="5,10,5,10" BorderThickness="2" BorderBrush="LightSlateGray" CornerRadius="2">
-                    <Grid Height="30">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid Column="0">
-                            <TextBlock Text="タイトル" FontWeight="Bold" VerticalAlignment="Center" Margin="10,0,10,0"/> 
-                        </Grid>
-                        <Grid Column="1" Background="LightSlateGray" Width="2"/>
-                        <Grid Column="2">
-                            <TextBox Text="{Binding AttackRouteComment.Value}" BorderThickness="0" VerticalContentAlignment="Center">
-                                <TextBox.Style>
-                                    <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
-                                        <Style.Resources>
-                                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Top" Stretch="None">
-                                                <VisualBrush.Visual>
-                                                    <Label Content="タイトルや備考などを入力(空欄可)" Foreground="Gray" VerticalContentAlignment="Center"/>
-                                                </VisualBrush.Visual>
-                                            </VisualBrush>
-                                        </Style.Resources>
-                                        <Style.Triggers>
-                                            <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                            </Trigger>
-                                            <Trigger Property="Text" Value="{x:Null}">
-                                                <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                            </Trigger>
-                                            <Trigger Property="IsKeyboardFocused" Value="True">
-                                                <Setter Property="Background" Value="White" />
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBox.Style>
-                            </TextBox>
-                        </Grid>
-                    </Grid>
-                </Border>
-            </Grid>
-            <Grid Row="3">
-                <ListBox
+                </Grid>
+                <Grid Row="3">
+                    <ListBox
                     ItemsSource="{Binding AttackParties}"
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     ScrollViewer.VerticalScrollBarVisibility="Visible"
@@ -127,277 +142,277 @@
                     Height="Auto"
                     Margin="5,5,5,5"
                 >
-                    <!-- ItemsControl.Templateの設定 -->
-                    <!-- 主に Border コントロール等で全体の枠線や背景色の設定を行う -->
-                    <ListBox.Template>
-                        <ControlTemplate TargetType="ItemsControl">
-                            <Border>
-                                <ScrollViewer>
-                                    <ItemsPresenter/>
-                                </ScrollViewer>
-                            </Border>
-                        </ControlTemplate>
-                    </ListBox.Template>
+                        <!-- ItemsControl.Templateの設定 -->
+                        <!-- 主に Border コントロール等で全体の枠線や背景色の設定を行う -->
+                        <ListBox.Template>
+                            <ControlTemplate TargetType="ItemsControl">
+                                <Border>
+                                    <ScrollViewer>
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </ControlTemplate>
+                        </ListBox.Template>
 
-                    <!-- ItemsControl.ItemTemplateを設定 -->
-                    <!-- 各項目のデータ オブジェクトをどのように表示するかを決定する(リストの中身をつくる) -->
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type vm:AttackRouteListElementViewModel}">
-                            <Border BorderThickness="2" BorderBrush="LightSlateGray" CornerRadius="5" Margin="0,2,0,2" Background="White">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid Column="0">
-                                        <StackPanel Orientation="Vertical">
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
-                                                <Border BorderThickness="2" CornerRadius="2" BorderBrush="CornflowerBlue"
+                        <!-- ItemsControl.ItemTemplateを設定 -->
+                        <!-- 各項目のデータ オブジェクトをどのように表示するかを決定する(リストの中身をつくる) -->
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:AttackRouteListElementViewModel}">
+                                <Border BorderThickness="2" BorderBrush="LightSlateGray" CornerRadius="5" Margin="0,2,0,2" Background="White">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Column="0">
+                                            <StackPanel Orientation="Vertical">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
+                                                    <Border BorderThickness="2" CornerRadius="2" BorderBrush="CornflowerBlue"
                                                         Visibility="{Binding EstimateDamage.Value, Converter={StaticResource IntToVisibilityConverter}}">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <Border BorderThickness="2" BorderBrush="CornflowerBlue" Background="CornflowerBlue">
-                                                            <TextBlock Text="推定ダメージ" Foreground="WhiteSmoke" Margin="2,2,2,2"/>
-                                                        </Border>
-                                                        <StackPanel Orientation="Horizontal" Margin="10,0,10,0" VerticalAlignment="Center">
-                                                            <TextBlock Text="{Binding EstimateDamage.Value}"/>
-                                                            <TextBlock Text="万" Margin="2,0,0,0"/>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Border BorderThickness="2" BorderBrush="CornflowerBlue" Background="CornflowerBlue">
+                                                                <TextBlock Text="推定ダメージ" Foreground="WhiteSmoke" Margin="2,2,2,2"/>
+                                                            </Border>
+                                                            <StackPanel Orientation="Horizontal" Margin="10,0,10,0" VerticalAlignment="Center">
+                                                                <TextBlock Text="{Binding EstimateDamage.Value}"/>
+                                                                <TextBlock Text="万" Margin="2,0,0,0"/>
+                                                            </StackPanel>
                                                         </StackPanel>
-                                                    </StackPanel>
-                                                </Border>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal">
-                                                <ListBox ItemsSource="{Binding PartyUnits}"
+                                                    </Border>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ListBox ItemsSource="{Binding PartyUnits}"
                                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                          ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                                          IsEnabled="False">
 
-                                                    <!-- ItemsControl.Templateの設定 -->
-                                                    <!-- 主に Border コントロール等で全体の枠線や背景色の設定を行う -->
-                                                    <ListBox.Template>
-                                                        <ControlTemplate TargetType="ItemsControl">
-                                                            <Border>
-                                                                <ScrollViewer>
-                                                                    <ItemsPresenter/>
-                                                                </ScrollViewer>
-                                                            </Border>
-                                                        </ControlTemplate>
-                                                    </ListBox.Template>
-                                                    <!-- ItemsControl.ItemsPanel -->
-                                                    <!-- コレクション項目をどのようにレイアウトするか(リストの並び方をどうするか)を決定する -->
-                                                    <ListBox.ItemsPanel>
-                                                        <ItemsPanelTemplate>
-                                                            <WrapPanel ItemWidth="Auto" ItemHeight="Auto" HorizontalAlignment="Left"/>
-                                                        </ItemsPanelTemplate>
-                                                    </ListBox.ItemsPanel>
+                                                        <!-- ItemsControl.Templateの設定 -->
+                                                        <!-- 主に Border コントロール等で全体の枠線や背景色の設定を行う -->
+                                                        <ListBox.Template>
+                                                            <ControlTemplate TargetType="ItemsControl">
+                                                                <Border>
+                                                                    <ScrollViewer>
+                                                                        <ItemsPresenter/>
+                                                                    </ScrollViewer>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </ListBox.Template>
+                                                        <!-- ItemsControl.ItemsPanel -->
+                                                        <!-- コレクション項目をどのようにレイアウトするか(リストの並び方をどうするか)を決定する -->
+                                                        <ListBox.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel ItemWidth="Auto" ItemHeight="Auto" HorizontalAlignment="Left"/>
+                                                            </ItemsPanelTemplate>
+                                                        </ListBox.ItemsPanel>
 
-                                                    <!-- ItemsControl.ItemTemplateを設定 -->
-                                                    <!-- 各項目のデータ オブジェクトをどのように表示するかを決定する(リストの中身をつくる) -->
-                                                    <ListBox.ItemTemplate>
-                                                        <DataTemplate DataType="{x:Type vm:UserUnitViewModel}">
-                                                            <Grid>
-                                                                <Border CornerRadius="5" BorderThickness="2" Margin="2,2,2,2">
-                                                                    <!-- サムネ中身 -->
-                                                                    <Grid>
-                                                                        <Grid.RowDefinitions>
-                                                                            <RowDefinition Height="Auto"/>
-                                                                            <RowDefinition Height="Auto"/>
-                                                                            <RowDefinition Height="*"/>
-                                                                        </Grid.RowDefinitions>
-                                                                        <Grid Row="0">
-                                                                            <!-- サムネ -->
-                                                                            <Image Source="{Binding Icon.Value}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
-                                                                            <!-- サポートか -->
-                                                                            <Image Source="{Binding IsSupport.Value, Converter={StaticResource SupportFlagToImageSourceConverter}}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
-                                                                            <!-- 枠 -->
-                                                                            <Image Source="{Binding Rank.Value, Converter={StaticResource RankToImageSourceConverter}}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
-                                                                            <!-- ★ -->
-                                                                            <Image Source="{Binding Rarity.Value, Converter={StaticResource RarityToImageSourceConverter}}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
-                                                                        </Grid>
-                                                                        <Grid Row="1">
-                                                                            <TextBlock Text="{Binding RankView.Value}" Visibility="{Binding IsShowRank.Value}" TextAlignment="Center" Foreground="Black" Margin="0,0,0,5" FontSize="11"/>
-                                                                        </Grid>
-                                                                        <Grid Row="2">
-                                                                            <Border VerticalAlignment="Bottom">
-                                                                                <TextBlock  Foreground="WhiteSmoke" TextAlignment="Center">
-                                                                                    <TextBlock.Style>
-                                                                                        <Style TargetType="TextBlock">
+                                                        <!-- ItemsControl.ItemTemplateを設定 -->
+                                                        <!-- 各項目のデータ オブジェクトをどのように表示するかを決定する(リストの中身をつくる) -->
+                                                        <ListBox.ItemTemplate>
+                                                            <DataTemplate DataType="{x:Type vm:UserUnitViewModel}">
+                                                                <Grid>
+                                                                    <Border CornerRadius="5" BorderThickness="2" Margin="2,2,2,2">
+                                                                        <!-- サムネ中身 -->
+                                                                        <Grid>
+                                                                            <Grid.RowDefinitions>
+                                                                                <RowDefinition Height="Auto"/>
+                                                                                <RowDefinition Height="Auto"/>
+                                                                                <RowDefinition Height="*"/>
+                                                                            </Grid.RowDefinitions>
+                                                                            <Grid Row="0">
+                                                                                <!-- サムネ -->
+                                                                                <Image Source="{Binding Icon.Value}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                                <!-- サポートか -->
+                                                                                <Image Source="{Binding IsSupport.Value, Converter={StaticResource SupportFlagToImageSourceConverter}}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                                <!-- 枠 -->
+                                                                                <Image Source="{Binding Rank.Value, Converter={StaticResource RankToImageSourceConverter}}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                                <!-- ★ -->
+                                                                                <Image Source="{Binding Rarity.Value, Converter={StaticResource RarityToImageSourceConverter}}" Width="80" Margin="3,3,3,3" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                            </Grid>
+                                                                            <Grid Row="1">
+                                                                                <TextBlock Text="{Binding RankView.Value}" Visibility="{Binding IsShowRank.Value}" TextAlignment="Center" Foreground="Black" Margin="0,0,0,5" FontSize="11"/>
+                                                                            </Grid>
+                                                                            <Grid Row="2">
+                                                                                <Border VerticalAlignment="Bottom">
+                                                                                    <TextBlock  Foreground="WhiteSmoke" TextAlignment="Center">
+                                                                                        <TextBlock.Style>
+                                                                                            <Style TargetType="TextBlock">
+                                                                                                <Style.Triggers>
+                                                                                                    <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
+                                                                                                        <Setter Property="Text" Value="キャラ被り"/>
+                                                                                                    </DataTrigger>
+                                                                                                    <DataTrigger Binding="{Binding IsDoublingSupport.Value}" Value="True">
+                                                                                                        <Setter Property="Text" Value="複数サポート"/>
+                                                                                                    </DataTrigger>
+                                                                                                    <MultiDataTrigger>
+                                                                                                        <MultiDataTrigger.Conditions>
+                                                                                                            <Condition Binding="{Binding IsDoubling.Value}" Value="False"/>
+                                                                                                            <Condition Binding="{Binding IsDoublingSupport.Value}" Value="False"/>
+                                                                                                        </MultiDataTrigger.Conditions>
+                                                                                                        <Setter Property="Text" Value=""/>
+                                                                                                    </MultiDataTrigger>
+                                                                                                </Style.Triggers>
+                                                                                            </Style>
+                                                                                        </TextBlock.Style>
+                                                                                    </TextBlock>
+                                                                                    <Border.Style>
+                                                                                        <Style TargetType="Border">
                                                                                             <Style.Triggers>
                                                                                                 <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
-                                                                                                    <Setter Property="Text" Value="キャラ被り"/>
+                                                                                                    <Setter Property="Background" Value="Crimson"/>
                                                                                                 </DataTrigger>
                                                                                                 <DataTrigger Binding="{Binding IsDoublingSupport.Value}" Value="True">
-                                                                                                    <Setter Property="Text" Value="複数サポート"/>
+                                                                                                    <Setter Property="Background" Value="DodgerBlue"/>
                                                                                                 </DataTrigger>
-                                                                                                <MultiDataTrigger>
-                                                                                                    <MultiDataTrigger.Conditions>
-                                                                                                        <Condition Binding="{Binding IsDoubling.Value}" Value="False"/>
-                                                                                                        <Condition Binding="{Binding IsDoublingSupport.Value}" Value="False"/>
-                                                                                                    </MultiDataTrigger.Conditions>
-                                                                                                    <Setter Property="Text" Value=""/>
-                                                                                                </MultiDataTrigger>
                                                                                             </Style.Triggers>
                                                                                         </Style>
-                                                                                    </TextBlock.Style>
-                                                                                </TextBlock>     
-                                                                                <Border.Style>
-                                                                                    <Style TargetType="Border">
+                                                                                    </Border.Style>
+                                                                                </Border>
+                                                                                <Grid.Style>
+                                                                                    <Style TargetType="Grid">
                                                                                         <Style.Triggers>
                                                                                             <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
-                                                                                                <Setter Property="Background" Value="Crimson"/>
+                                                                                                <Setter Property="Visibility" Value="Visible"/>
                                                                                             </DataTrigger>
                                                                                             <DataTrigger Binding="{Binding IsDoublingSupport.Value}" Value="True">
-                                                                                                <Setter Property="Background" Value="DodgerBlue"/>
+                                                                                                <Setter Property="Visibility" Value="Visible"/>
                                                                                             </DataTrigger>
+                                                                                            <MultiDataTrigger>
+                                                                                                <MultiDataTrigger.Conditions>
+                                                                                                    <Condition Binding="{Binding IsDoubling.Value}" Value="False"/>
+                                                                                                    <Condition Binding="{Binding IsDoublingSupport.Value}" Value="False"/>
+                                                                                                </MultiDataTrigger.Conditions>
+                                                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                                            </MultiDataTrigger>
                                                                                         </Style.Triggers>
                                                                                     </Style>
-                                                                                </Border.Style>                                                                
-                                                                            </Border>
-                                                                            <Grid.Style>
-                                                                                <Style TargetType="Grid">
-                                                                                    <Style.Triggers>
-                                                                                        <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
-                                                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                                                        </DataTrigger>
-                                                                                        <DataTrigger Binding="{Binding IsDoublingSupport.Value}" Value="True">
-                                                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                                                        </DataTrigger>
-                                                                                        <MultiDataTrigger>
-                                                                                            <MultiDataTrigger.Conditions>
-                                                                                                <Condition Binding="{Binding IsDoubling.Value}" Value="False"/>
-                                                                                                <Condition Binding="{Binding IsDoublingSupport.Value}" Value="False"/>
-                                                                                            </MultiDataTrigger.Conditions>
-                                                                                            <Setter Property="Visibility" Value="Collapsed"/>
-                                                                                        </MultiDataTrigger>
-                                                                                    </Style.Triggers>
-                                                                                </Style>
-                                                                            </Grid.Style>
+                                                                                </Grid.Style>
+                                                                            </Grid>
                                                                         </Grid>
-                                                                    </Grid>
-                                                                    <Border.Style>
-                                                                        <Style TargetType="Border">
-                                                                            <Style.Triggers>
-                                                                                <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
-                                                                                    <Setter Property="BorderBrush" Value="Crimson"/>
-                                                                                </DataTrigger>
-                                                                                <DataTrigger Binding="{Binding IsDoublingSupport.Value}" Value="True">
-                                                                                    <Setter Property="BorderBrush" Value="DodgerBlue"/>
-                                                                                </DataTrigger>
-                                                                                <MultiDataTrigger>
-                                                                                    <MultiDataTrigger.Conditions>
-                                                                                        <Condition Binding="{Binding IsDoubling.Value}" Value="False"/>
-                                                                                        <Condition Binding="{Binding IsDoublingSupport.Value}" Value="False"/>
-                                                                                    </MultiDataTrigger.Conditions>
-                                                                                    <Setter Property="BorderBrush" Value="White"/>
-                                                                                </MultiDataTrigger>
-                                                                            </Style.Triggers>
-                                                                        </Style>
-                                                                    </Border.Style>
-                                                                </Border>
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </ListBox.ItemTemplate>
+                                                                        <Border.Style>
+                                                                            <Style TargetType="Border">
+                                                                                <Style.Triggers>
+                                                                                    <DataTrigger Binding="{Binding IsDoubling.Value}" Value="True">
+                                                                                        <Setter Property="BorderBrush" Value="Crimson"/>
+                                                                                    </DataTrigger>
+                                                                                    <DataTrigger Binding="{Binding IsDoublingSupport.Value}" Value="True">
+                                                                                        <Setter Property="BorderBrush" Value="DodgerBlue"/>
+                                                                                    </DataTrigger>
+                                                                                    <MultiDataTrigger>
+                                                                                        <MultiDataTrigger.Conditions>
+                                                                                            <Condition Binding="{Binding IsDoubling.Value}" Value="False"/>
+                                                                                            <Condition Binding="{Binding IsDoublingSupport.Value}" Value="False"/>
+                                                                                        </MultiDataTrigger.Conditions>
+                                                                                        <Setter Property="BorderBrush" Value="White"/>
+                                                                                    </MultiDataTrigger>
+                                                                                </Style.Triggers>
+                                                                            </Style>
+                                                                        </Border.Style>
+                                                                    </Border>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ListBox.ItemTemplate>
 
 
-                                                    <!-- ListBox.ItemContainerStyleを設定 -->
-                                                    <!--項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作を決定する-->
-                                                    <ListBox.ItemContainerStyle>
-                                                        <Style TargetType="ListBoxItem">
-                                                            <Setter Property="Template">
-                                                                <Setter.Value>
-                                                                    <ControlTemplate TargetType="{x:Type ContentControl}">
-                                                                        <Border Background="{TemplateBinding Background}">
-                                                                            <ContentPresenter />
-                                                                        </Border>
-                                                                    </ControlTemplate>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </Style>
-                                                    </ListBox.ItemContainerStyle>
-                                                </ListBox>
-                                            </StackPanel>
-                                            <Border BorderThickness="2" BorderBrush="DarkGray" CornerRadius="3" Margin="3,3,3,3"
+                                                        <!-- ListBox.ItemContainerStyleを設定 -->
+                                                        <!--項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作を決定する-->
+                                                        <ListBox.ItemContainerStyle>
+                                                            <Style TargetType="ListBoxItem">
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="{x:Type ContentControl}">
+                                                                            <Border Background="{TemplateBinding Background}">
+                                                                                <ContentPresenter />
+                                                                            </Border>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Style>
+                                                        </ListBox.ItemContainerStyle>
+                                                    </ListBox>
+                                                </StackPanel>
+                                                <Border BorderThickness="2" BorderBrush="DarkGray" CornerRadius="3" Margin="3,3,3,3"
                                                 Visibility="{Binding Comment.Value, Converter={StaticResource StringToVisibilityConverter}}">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid Column="0">
-                                                        <TextBlock Text="{Binding Comment.Value}" Margin="5,5,5,5" FontFamily="Menlo"/>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid Column="0">
+                                                            <TextBlock Text="{Binding Comment.Value}" Margin="5,5,5,5" FontFamily="Menlo"/>
+                                                        </Grid>
+                                                        <Grid Column="1" Visibility="{Binding IsShowExpandCommentButton.Value}">
+                                                            <ToggleButton HorizontalAlignment="Right" VerticalAlignment="Top" Margin="2,2,2,2" IsChecked="{Binding IsExpandComment.Value}" Height="20">
+                                                                <TextBlock Text="▼" FontSize="10" Margin="3,0,3,0"/>
+                                                            </ToggleButton>
+                                                        </Grid>
                                                     </Grid>
-                                                    <Grid Column="1" Visibility="{Binding IsShowExpandCommentButton.Value}">
-                                                        <ToggleButton HorizontalAlignment="Right" VerticalAlignment="Top" Margin="2,2,2,2" IsChecked="{Binding IsExpandComment.Value}" Height="20">
-                                                            <TextBlock Text="▼" FontSize="10" Margin="3,0,3,0"/>
-                                                        </ToggleButton>
-                                                    </Grid>
-                                                </Grid>
-                                            </Border>
-                                        </StackPanel>
-                                    </Grid>
-                                    <Grid Column="1">
-                                        <Border>
-                                            <StackPanel Orientation="Vertical" Margin="5,0,5,0" VerticalAlignment="Center">
-                                                <Button Command="{Binding OnUnSelect}">
-                                                    <fa:ImageAwesome Icon="CaretRight" Width="10" Margin="3,3,3,3"/>
-                                                </Button>
+                                                </Border>
                                             </StackPanel>
-                                        </Border>
+                                        </Grid>
+                                        <Grid Column="1">
+                                            <Border>
+                                                <StackPanel Orientation="Vertical" Margin="5,0,5,0" VerticalAlignment="Center">
+                                                    <Button Command="{Binding OnUnSelect}">
+                                                        <fa:ImageAwesome Icon="CaretRight" Width="10" Margin="3,3,3,3"/>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
                                     </Grid>
-                                </Grid>
-                            </Border>
+                                </Border>
 
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
 
-                    <!-- ListBox.ItemContainerStyleを設定 -->
-                    <!--項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作を決定する-->
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type ContentControl}">
-                                        <Border Background="{TemplateBinding Background}">
-                                            <ContentPresenter />
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                </ListBox>
+                        <!-- ListBox.ItemContainerStyleを設定 -->
+                        <!--項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作を決定する-->
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ContentControl}">
+                                            <Border Background="{TemplateBinding Background}">
+                                                <ContentPresenter />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </Grid>
             </Grid>
-        </Grid>
-        <Grid Column="1"  Background="Lavender">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid Row="0">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Border Background="RoyalBlue" CornerRadius="0,0,10,10">
-                        <TextBlock Text="パーティ一覧" Foreground="WhiteSmoke" FontSize="15" FontWeight="Bold" Margin="25,5,25,5"/>
-                    </Border>
-                </StackPanel>
-            </Grid>
-            <Grid Row="1">
-                <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
-                    <Button Command="{Binding AddParty}" Height="Auto" Margin="5,5,5,5">
-                        <StackPanel Orientation="Horizontal" Margin="15,3,15,3">
-                            <fa:ImageAwesome Icon="Plus" Width="15"/>
-                            <TextBlock Text="追加" FontSize="14" Margin="3,0,0,0"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Command="{Binding ImportParty}" Height="Auto" Margin="5,5,5,5">
-                        <StackPanel Orientation="Horizontal" Margin="15,3,15,3">
-                            <fa:ImageAwesome Icon="SignIn" Width="15"/>
-                            <TextBlock Text="インポート" FontSize="14" Margin="3,0,0,0"/>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
-            </Grid>
-            <Grid Row="2">
-                <ListBox
+            <Grid Column="1"  Background="Lavender">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Row="0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Border Background="RoyalBlue" CornerRadius="0,0,10,10">
+                            <TextBlock Text="パーティ一覧" Foreground="WhiteSmoke" FontSize="15" FontWeight="Bold" Margin="25,5,25,5"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+                <Grid Row="1">
+                    <StackPanel Orientation="Horizontal" Margin="5,5,5,5">
+                        <Button Command="{Binding AddParty}" Height="Auto" Margin="5,5,5,5">
+                            <StackPanel Orientation="Horizontal" Margin="15,3,15,3">
+                                <fa:ImageAwesome Icon="Plus" Width="15"/>
+                                <TextBlock Text="追加" FontSize="14" Margin="3,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Command="{Binding ImportParty}" Height="Auto" Margin="5,5,5,5">
+                            <StackPanel Orientation="Horizontal" Margin="15,3,15,3">
+                                <fa:ImageAwesome Icon="SignIn" Width="15"/>
+                                <TextBlock Text="インポート" FontSize="14" Margin="3,0,0,0"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <Grid Row="2">
+                    <ListBox
                     ItemsSource="{Binding UserParties}"
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     ScrollViewer.VerticalScrollBarVisibility="Visible"
@@ -406,180 +421,181 @@
                     Height="Auto"
                     Margin="5,5,5,5"
                 >
-                    <!-- ItemsControl.Templateの設定 -->
-                    <!-- 主に Border コントロール等で全体の枠線や背景色の設定を行う -->
-                    <ListBox.Template>
-                        <ControlTemplate TargetType="ItemsControl">
-                            <Border>
-                                <ScrollViewer>
-                                    <ItemsPresenter/>
-                                </ScrollViewer>
-                            </Border>
-                        </ControlTemplate>
-                    </ListBox.Template>
+                        <!-- ItemsControl.Templateの設定 -->
+                        <!-- 主に Border コントロール等で全体の枠線や背景色の設定を行う -->
+                        <ListBox.Template>
+                            <ControlTemplate TargetType="ItemsControl">
+                                <Border>
+                                    <ScrollViewer>
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </ControlTemplate>
+                        </ListBox.Template>
 
-                    <!-- ItemsControl.ItemTemplateを設定 -->
-                    <!-- 各項目のデータ オブジェクトをどのように表示するかを決定する(リストの中身をつくる) -->
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type vm:PartyListElementViewModel}">
-                            <Border BorderThickness="2" BorderBrush="LightSlateGray" CornerRadius="5" Margin="0,2,0,2" Background="{Binding IsSelectedRoute.Value, Converter={StaticResource SelectFlagToColorBrushConverter}}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid Column="0">
-                                        <Border>
-                                            <StackPanel Orientation="Vertical" Margin="5,0,5,0" VerticalAlignment="Center">
-                                                <Button Command="{Binding OnSelect}">
-                                                    <fa:ImageAwesome Icon="CaretLeft" Width="10" Margin="3,3,3,3"/>
-                                                </Button>
-                                            </StackPanel>
-                                        </Border>
-                                    </Grid>
-                                    <Grid Column="1">
-                                        <StackPanel Orientation="Vertical">
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
-                                                <Border BorderThickness="2" CornerRadius="2" BorderBrush="CornflowerBlue"
+                        <!-- ItemsControl.ItemTemplateを設定 -->
+                        <!-- 各項目のデータ オブジェクトをどのように表示するかを決定する(リストの中身をつくる) -->
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:PartyListElementViewModel}">
+                                <Border BorderThickness="2" BorderBrush="LightSlateGray" CornerRadius="5" Margin="0,2,0,2" Background="{Binding IsSelectedRoute.Value, Converter={StaticResource SelectFlagToColorBrushConverter}}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Column="0">
+                                            <Border>
+                                                <StackPanel Orientation="Vertical" Margin="5,0,5,0" VerticalAlignment="Center">
+                                                    <Button Command="{Binding OnSelect}">
+                                                        <fa:ImageAwesome Icon="CaretLeft" Width="10" Margin="3,3,3,3"/>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
+                                        <Grid Column="1">
+                                            <StackPanel Orientation="Vertical">
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
+                                                    <Border BorderThickness="2" CornerRadius="2" BorderBrush="CornflowerBlue"
                                                         Visibility="{Binding EstimateDamage.Value, Converter={StaticResource IntToVisibilityConverter}}">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <Border BorderThickness="2" BorderBrush="CornflowerBlue" Background="CornflowerBlue">
-                                                            <TextBlock Text="推定ダメージ" Foreground="WhiteSmoke" Margin="2,2,2,2"/>
-                                                        </Border>
-                                                        <StackPanel Orientation="Horizontal" Margin="10,0,10,0" VerticalAlignment="Center">
-                                                            <TextBlock Text="{Binding EstimateDamage.Value}"/>
-                                                            <TextBlock Text="万" Margin="2,0,0,0"/>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Border BorderThickness="2" BorderBrush="CornflowerBlue" Background="CornflowerBlue">
+                                                                <TextBlock Text="推定ダメージ" Foreground="WhiteSmoke" Margin="2,2,2,2"/>
+                                                            </Border>
+                                                            <StackPanel Orientation="Horizontal" Margin="10,0,10,0" VerticalAlignment="Center">
+                                                                <TextBlock Text="{Binding EstimateDamage.Value}"/>
+                                                                <TextBlock Text="万" Margin="2,0,0,0"/>
+                                                            </StackPanel>
                                                         </StackPanel>
-                                                    </StackPanel>
-                                                </Border>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal">
-                                                <ListBox ItemsSource="{Binding PartyUnits}"
+                                                    </Border>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ListBox ItemsSource="{Binding PartyUnits}"
                                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                          ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                                          IsEnabled="False">
 
-                                                    <!-- ItemsControl.Templateの設定 -->
-                                                    <!-- 主に Border コントロール等で全体の枠線や背景色の設定を行う -->
-                                                    <ListBox.Template>
-                                                        <ControlTemplate TargetType="ItemsControl">
-                                                            <Border>
-                                                                <ScrollViewer>
-                                                                    <ItemsPresenter/>
-                                                                </ScrollViewer>
-                                                            </Border>
-                                                        </ControlTemplate>
-                                                    </ListBox.Template>
-                                                    <!-- ItemsControl.ItemsPanel -->
-                                                    <!-- コレクション項目をどのようにレイアウトするか(リストの並び方をどうするか)を決定する -->
-                                                    <ListBox.ItemsPanel>
-                                                        <ItemsPanelTemplate>
-                                                            <WrapPanel ItemWidth="Auto" ItemHeight="Auto" HorizontalAlignment="Left"/>
-                                                        </ItemsPanelTemplate>
-                                                    </ListBox.ItemsPanel>
+                                                        <!-- ItemsControl.Templateの設定 -->
+                                                        <!-- 主に Border コントロール等で全体の枠線や背景色の設定を行う -->
+                                                        <ListBox.Template>
+                                                            <ControlTemplate TargetType="ItemsControl">
+                                                                <Border>
+                                                                    <ScrollViewer>
+                                                                        <ItemsPresenter/>
+                                                                    </ScrollViewer>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </ListBox.Template>
+                                                        <!-- ItemsControl.ItemsPanel -->
+                                                        <!-- コレクション項目をどのようにレイアウトするか(リストの並び方をどうするか)を決定する -->
+                                                        <ListBox.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel ItemWidth="Auto" ItemHeight="Auto" HorizontalAlignment="Left"/>
+                                                            </ItemsPanelTemplate>
+                                                        </ListBox.ItemsPanel>
 
-                                                    <!-- ItemsControl.ItemTemplateを設定 -->
-                                                    <!-- 各項目のデータ オブジェクトをどのように表示するかを決定する(リストの中身をつくる) -->
-                                                    <ListBox.ItemTemplate>
-                                                        <DataTemplate DataType="{x:Type vm:UserUnitViewModel}">
-                                                            <Grid>
-                                                                <!-- サムネ中身 -->
-                                                                <StackPanel>
-                                                                    <Grid>
-                                                                        <!-- サムネ -->
-                                                                        <Image Source="{Binding Icon.Value}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
-                                                                        <!-- サポートか -->
-                                                                        <Image Source="{Binding IsSupport.Value, Converter={StaticResource SupportFlagToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
-                                                                        <!-- 枠 -->
-                                                                        <Image Source="{Binding Rank.Value, Converter={StaticResource RankToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
-                                                                        <!-- ★ -->
-                                                                        <Image Source="{Binding Rarity.Value, Converter={StaticResource RarityToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
-                                                                    </Grid>
-                                                                    <TextBlock Text="{Binding RankView.Value}" Visibility="{Binding IsShowRank.Value}" TextAlignment="Center" Foreground="Black" Margin="0,0,0,5" FontSize="11"/>
-                                                                </StackPanel>
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </ListBox.ItemTemplate>
+                                                        <!-- ItemsControl.ItemTemplateを設定 -->
+                                                        <!-- 各項目のデータ オブジェクトをどのように表示するかを決定する(リストの中身をつくる) -->
+                                                        <ListBox.ItemTemplate>
+                                                            <DataTemplate DataType="{x:Type vm:UserUnitViewModel}">
+                                                                <Grid>
+                                                                    <!-- サムネ中身 -->
+                                                                    <StackPanel>
+                                                                        <Grid>
+                                                                            <!-- サムネ -->
+                                                                            <Image Source="{Binding Icon.Value}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                            <!-- サポートか -->
+                                                                            <Image Source="{Binding IsSupport.Value, Converter={StaticResource SupportFlagToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                            <!-- 枠 -->
+                                                                            <Image Source="{Binding Rank.Value, Converter={StaticResource RankToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                            <!-- ★ -->
+                                                                            <Image Source="{Binding Rarity.Value, Converter={StaticResource RarityToImageSourceConverter}}" Width="80" Margin="5,5,5,5" RenderOptions.BitmapScalingMode="Fant"/>
+                                                                        </Grid>
+                                                                        <TextBlock Text="{Binding RankView.Value}" Visibility="{Binding IsShowRank.Value}" TextAlignment="Center" Foreground="Black" Margin="0,0,0,5" FontSize="11"/>
+                                                                    </StackPanel>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ListBox.ItemTemplate>
 
 
-                                                    <!-- ListBox.ItemContainerStyleを設定 -->
-                                                    <!--項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作を決定する-->
-                                                    <ListBox.ItemContainerStyle>
-                                                        <Style TargetType="ListBoxItem">
-                                                            <Setter Property="Template">
-                                                                <Setter.Value>
-                                                                    <ControlTemplate TargetType="{x:Type ContentControl}">
-                                                                        <Border Background="{TemplateBinding Background}">
-                                                                            <ContentPresenter />
-                                                                        </Border>
-                                                                    </ControlTemplate>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </Style>
-                                                    </ListBox.ItemContainerStyle>
-                                                </ListBox>
-                                            </StackPanel>
-                                            <Border BorderThickness="2" BorderBrush="DarkGray" CornerRadius="3" Margin="3,3,3,3"
+                                                        <!-- ListBox.ItemContainerStyleを設定 -->
+                                                        <!--項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作を決定する-->
+                                                        <ListBox.ItemContainerStyle>
+                                                            <Style TargetType="ListBoxItem">
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="{x:Type ContentControl}">
+                                                                            <Border Background="{TemplateBinding Background}">
+                                                                                <ContentPresenter />
+                                                                            </Border>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Style>
+                                                        </ListBox.ItemContainerStyle>
+                                                    </ListBox>
+                                                </StackPanel>
+                                                <Border BorderThickness="2" BorderBrush="DarkGray" CornerRadius="3" Margin="3,3,3,3"
                                                 Visibility="{Binding Comment.Value, Converter={StaticResource StringToVisibilityConverter}}">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="Auto"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <Grid Column="0">
-                                                        <TextBlock Text="{Binding Comment.Value}" Margin="5,5,5,5" FontFamily="Menlo"/>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid Column="0">
+                                                            <TextBlock Text="{Binding Comment.Value}" Margin="5,5,5,5" FontFamily="Menlo"/>
+                                                        </Grid>
+                                                        <Grid Column="1" Visibility="{Binding IsShowExpandCommentButton.Value}">
+                                                            <ToggleButton HorizontalAlignment="Right" VerticalAlignment="Top" Margin="2,2,2,2" IsChecked="{Binding IsExpandComment.Value}" Height="20">
+                                                                <TextBlock Text="▼" FontSize="10" Margin="3,0,3,0"/>
+                                                            </ToggleButton>
+                                                        </Grid>
                                                     </Grid>
-                                                    <Grid Column="1" Visibility="{Binding IsShowExpandCommentButton.Value}">
-                                                        <ToggleButton HorizontalAlignment="Right" VerticalAlignment="Top" Margin="2,2,2,2" IsChecked="{Binding IsExpandComment.Value}" Height="20">
-                                                            <TextBlock Text="▼" FontSize="10" Margin="3,0,3,0"/>
-                                                        </ToggleButton>
-                                                    </Grid>
-                                                </Grid>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid Column="2">
+                                            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                                                <Button HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,2,2,2">
+                                                    <fa:ImageAwesome Icon="Bars" Width="14" Margin="5,5,5,5"/>
+                                                    <Button.ContextMenu>
+                                                        <ContextMenu>
+                                                            <MenuItem Header="複製" Command="{Binding OnDuplicate}"/>
+                                                            <MenuItem Header="エクスポート" Command="{Binding OnExport}"/>
+                                                        </ContextMenu>
+                                                    </Button.ContextMenu>
+                                                </Button>
+                                                <Button Command="{Binding EditParty}" CommandParameter="{Binding Party.Value}" HorizontalAlignment="Right" Margin="0,2,2,2">
+                                                    <fa:ImageAwesome Icon="Pencil" Width="14" Margin="5,5,5,5"/>
+                                                </Button>
+                                                <Button Command="{Binding OnDelete}" HorizontalAlignment="Right" Margin="0,2,2,2">
+                                                    <fa:ImageAwesome Icon="TrashOutline" Width="14" Margin="5,5,5,5"/>
+                                                </Button>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+
+                        <!-- ListBox.ItemContainerStyleを設定 -->
+                        <!--項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作を決定する-->
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ContentControl}">
+                                            <Border Background="{TemplateBinding Background}">
+                                                <ContentPresenter />
                                             </Border>
-                                        </StackPanel>
-                                    </Grid>
-                                    <Grid Column="2">
-                                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                            <Button HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,2,2,2">
-                                                <fa:ImageAwesome Icon="Bars" Width="14" Margin="5,5,5,5"/>
-                                                <Button.ContextMenu>
-                                                    <ContextMenu>
-                                                        <MenuItem Header="複製" Command="{Binding OnDuplicate}"/>
-                                                        <MenuItem Header="エクスポート" Command="{Binding OnExport}"/>
-                                                    </ContextMenu>
-                                                </Button.ContextMenu>
-                                            </Button>
-                                            <Button Command="{Binding EditParty}" CommandParameter="{Binding Party.Value}" HorizontalAlignment="Right" Margin="0,2,2,2">
-                                                <fa:ImageAwesome Icon="Pencil" Width="14" Margin="5,5,5,5"/>
-                                            </Button>
-                                            <Button Command="{Binding OnDelete}" HorizontalAlignment="Right" Margin="0,2,2,2">
-                                                <fa:ImageAwesome Icon="TrashOutline" Width="14" Margin="5,5,5,5"/>
-                                            </Button>
-                                        </StackPanel>
-                                    </Grid>
-                                </Grid>
-                            </Border>
-
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-
-                    <!-- ListBox.ItemContainerStyleを設定 -->
-                    <!--項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作を決定する-->
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type ContentControl}">
-                                        <Border Background="{TemplateBinding Background}">
-                                            <ContentPresenter />
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                </ListBox>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>
