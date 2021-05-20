@@ -1,4 +1,5 @@
-﻿using System.Windows.Media.Imaging;
+﻿using System.Text.Json.Serialization;
+using System.Windows.Media.Imaging;
 using PriconnePartyManager;
 using PriconnePartyManager.Scripts.Enum;
 using PriconnePartyManager.Scripts.Sql.Model;
@@ -19,9 +20,12 @@ namespace PriconnePartyManager.Scripts.DataModel
 		/// <summary> 並び順(小さいほど前) </summary>
 		public int Order { get; private set; }
 		
-		public BitmapImage Icon { get; private set; }
+		public BitmapImage Icon { get; set; }
 		
 		public UnitType Type { get; }
+		
+		[JsonIgnore]
+		public bool NotExistIcon { get; set; }
 
 		public Unit(UnitProfile profile, UnitData data, BitmapImage icon, bool isUnlockRarity6 = false)
 		{

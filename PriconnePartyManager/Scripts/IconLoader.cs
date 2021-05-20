@@ -27,7 +27,6 @@ namespace PriconnePartyManager.Scripts
 			var fileName = (unitId + maxRarity * RarityCoefficient).ToString();
 			if (!File.Exists($@"./data/icons/{fileName}.png"))
 			{
-				Console.WriteLine($"ファイル無し : {fileName}.png");
 				return null;
 			}
 

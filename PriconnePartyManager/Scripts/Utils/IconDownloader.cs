@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Windows;
 using Imazen.WebP;
+using PriconnePartyManager.Scripts.Common;
 using PriconnePartyManager.Scripts.Sql;
 
 namespace PriconnePartyManager.Scripts.Utils
@@ -16,43 +17,41 @@ namespace PriconnePartyManager.Scripts.Utils
         private const string DownloadLocation = "./data/icons/";
         private const int MaxDownload = 250;
 
-        public void DownloadIcons()
-        {
-            var sql = new SqlConnector();
-            var ids = sql.UnitProfiles.Select(x => x.UnitId).ToArray();
-            var rarity6Ids = sql.UnlockRarity6.Where(x => x.UnlockLevel > 0).Select(x => x.UnitId).Distinct().ToArray();
-            var playables = sql.UnitPlayables.Select(x => x.UnitId).Distinct().ToArray();
-            sql.Dispose();
+        /// <summary> DL必要数 </summary>
+        public int RequiredDownloadCount { get; }
 
-            var count = 0;
-            var downloadCount = 0;
-            var existCount = 0;
-            foreach (var id in ids)
+        public event Action OnCompleteDownload;
+
+        public IconDownloader()
+        {
+            var units = Database.I.Units;
+            foreach (var unit in units)
             {
-                if (count > MaxDownload)
+                var name = (unit.Id + (unit.IsUnlockRarity6 ? 6 : 3) * RarityCoefficient).ToString();
+                if (File.Exists($"{DownloadLocation}{name}.png"))
                 {
-                    MessageBox.Show("不足アイコンが一定数に達したため、中断されました。\n再度更新を行ってください。");
-                    break;
-                }
-                if (!playables.Contains(id))
-                {
-                    existCount++;
                     continue;
                 }
-                var isUnlockRarity6 = rarity6Ids.Contains(id);
-                var name = (id + (isUnlockRarity6 ? 6 : 3) * RarityCoefficient).ToString();
+                RequiredDownloadCount++;
+            }
+        }
+
+        public void DownloadIcons()
+        {
+            var units = Database.I.Units;
+            foreach (var unit in units)
+            {
+                var name = (unit.Id + (unit.IsUnlockRarity6 ? 6 : 3) * RarityCoefficient).ToString();
 
                 //既にあればスルーする
                 if (File.Exists($"{DownloadLocation}{name}.png"))
                 {
-                    existCount++;
                     continue;
                 }
                 //未変換だったら変換だけする
                 if (File.Exists($"{DownloadLocation}{name}.webp"))
                 {
                     ConvertWebpToPng(name);
-                    existCount++;
                     continue;
                 }
                 
@@ -61,21 +60,9 @@ namespace PriconnePartyManager.Scripts.Utils
                 {
                     ConvertWebpToPng(name);
                     File.Delete($"{DownloadLocation}{name}.webp");
-                    downloadCount--;
-                    if (downloadCount == 0)
-                    {
-                        MessageBox.Show("キャラアイコンの更新が終わりました。このソフトを再起動してください。");
-                    }
+                    OnCompleteDownload?.Invoke();
                 };
                 webClient.DownloadFileAsync(new Uri(string.Format(Url, name)), $"{DownloadLocation}{name}.webp");
-                
-                count++;
-                downloadCount++;
-            }
-
-            if (existCount == ids.Length)
-            {
-                MessageBox.Show("キャラアイコンはすべて揃っています。\n不足している場合、先にデータベースの更新を行ってください。");
             }
         }
 

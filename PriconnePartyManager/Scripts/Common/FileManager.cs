@@ -108,11 +108,5 @@ namespace PriconnePartyManager.Scripts.Common
 
             return true;
         }
-
-        public void UpdateUnitIcons()
-        {
-            var downloader = new IconDownloader();
-            downloader.DownloadIcons();
-        }
     }
 }

@@ -77,7 +77,11 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
 
             UpdateUnitIcons.Subscribe(() =>
             {
-                FileManager.I.UpdateUnitIcons();
+                var window = new DownloadUnitIcon();
+                if (!window.IsClosed)
+                {
+                    window.Show();
+                }
             });
 
             Database.I.OnAddUserParty += OnAddUserParty;

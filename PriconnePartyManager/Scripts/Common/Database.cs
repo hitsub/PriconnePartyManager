@@ -36,6 +36,8 @@ namespace PriconnePartyManager.Scripts.Common
         public event Action<UserAttackRoute> OnAddUserAttackRoute;
         public event Action<UserAttackRoute> OnRemoveUserAttackRoute;
         public event Action<UserAttackRoute> OnChangeUserAttackRoute;
+
+        private IconLoader m_IconLoader;
             
         public Database()
         {
@@ -65,7 +67,10 @@ namespace PriconnePartyManager.Scripts.Common
 
         private void CreateUnits()
         {
-            var iconLoader = new IconLoader();
+            if (m_IconLoader == null)
+            {
+                m_IconLoader= new IconLoader();
+            }
             var units = new List<Unit>();
             foreach (var profile in m_UnitProfiles)
             {
@@ -75,8 +80,13 @@ namespace PriconnePartyManager.Scripts.Common
                 }
                 var isUnlock6 = m_UnlockRarity6UnitIds.Contains(profile.UnitId);
                 var data = m_UnitData.SingleOrDefault(x => x.UnitId == profile.UnitId);
-                var unit = new Unit(profile, data, iconLoader.LoadIcon(profile.UnitId, isUnlock6), isUnlock6);
+                var unit = new Unit(profile, data, m_IconLoader.LoadIcon(profile.UnitId, isUnlock6), isUnlock6);
                 units.Add(unit);
+            }
+
+            if (units.Any(x => x.Icon == null))
+            {
+                MessageBox.Show("画像が無いキャラがあります。\nメニュー>データベース>キャラアイコン更新 を実行してください。");
             }
             
             Units = units.OrderBy(x => x.Order).ToArray();
@@ -212,6 +222,14 @@ namespace PriconnePartyManager.Scripts.Common
             File.WriteAllText(path, updateRediveString);
             
             InitializeDatabase();
+        }
+
+        public void RefreshUnitIcons()
+        {
+            foreach (var unit in Units)
+            {
+                unit.Icon = m_IconLoader.LoadIcon(unit.Id, unit.IsUnlockRarity6);
+            }
         }
         
     }
