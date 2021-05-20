@@ -52,6 +52,8 @@
     <Resource Include="Resources\unit_type_middle.png" />
     <None Remove="Resources\support_label.png" />
     <Resource Include="Resources\support_label.png" />
+    <None Remove="Resources\rank_green.png" />
+    <Resource Include="Resources\rank_green.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -86,6 +88,10 @@
       <Generator></Generator>
       <XamlRuntime>Wpf</XamlRuntime>
     </Page>
+    <Page Update="Windows\DownloadUnitIcon.xaml">
+      <Generator></Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
@@ -94,6 +100,9 @@
     </Compile>
     <Compile Update="Windows\OpenAttackRoute.xaml.cs">
       <DependentUpon>OpenAttackRoute.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Windows\DownloadUnitIcon.xaml.cs">
+      <DependentUpon>DownloadUnitIcon.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 

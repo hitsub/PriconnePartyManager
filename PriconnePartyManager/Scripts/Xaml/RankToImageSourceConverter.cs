@@ -37,6 +37,9 @@ namespace PriconnePartyManager.Scripts.Xaml
                 case UnitRank.Rank20:
                     sourceName = "rank_red.png";
                     break;
+                case UnitRank.Rank21:
+                    sourceName = "rank_green.png";
+                    break;
                 default:
                     sourceName = "rank_default.png";
                     break;

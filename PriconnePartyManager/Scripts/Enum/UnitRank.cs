@@ -35,5 +35,7 @@ namespace PriconnePartyManager.Scripts.Enum
 		Rank19 = 19,
 		[Description("ランク20")]
 		Rank20 = 20,
+		[Description("ランク21")]
+		Rank21 = 21,
 	}
 }
