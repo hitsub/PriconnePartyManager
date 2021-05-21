@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using PriconnePartyManager.Scripts.Common;
 using PriconnePartyManager.Scripts.DataModel;
@@ -37,6 +38,8 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReactiveCommand MenuDatabaseUpdateUnitIcons { get; } = new ReactiveCommand();
         
         public ReactiveCommand MenuHelpReportBug { get; } = new ReactiveCommand();
+        
+        public ReactiveCommand MenuHelpCurrentVersion { get; } = new ReactiveCommand();
         
         private Dictionary<int, int> m_DoublingCheckTable = new Dictionary<int, int>();
 
@@ -89,6 +92,12 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             MenuHelpReportBug.Subscribe(() =>
             {
                 System.Diagnostics.Process.Start("explorer.exe", "https://github.com/hitsub/PriconnePartyManager/issues");
+            });
+
+            MenuHelpCurrentVersion.Subscribe(() =>
+            {
+                var assembly = Assembly.GetExecutingAssembly().GetName();
+                MessageBox.Show($"{assembly.Name}\n{assembly.Version}", "バージョン情報");
             });
 
             Database.I.OnAddUserParty += OnAddUserParty;

@@ -31,6 +31,7 @@
                     </MenuItem>
                     <MenuItem Header="ヘルプ">
                         <MenuItem Header="バグ報告(GitHub Issues)" Command="{Binding MenuHelpReportBug}"/>
+                        <MenuItem Header="バージョン情報" Command="{Binding MenuHelpCurrentVersion}"/>
                     </MenuItem>
                 </Menu>
             </DockPanel>
