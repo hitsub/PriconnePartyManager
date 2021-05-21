@@ -26,8 +26,11 @@
             <DockPanel>
                 <Menu DockPanel.Dock="Top">
                     <MenuItem Header="データベース">
-                        <MenuItem Header="データベース更新" Command="{Binding UpdateDatabase}"/>
-                        <MenuItem Header="キャラアイコン更新" Command="{Binding UpdateUnitIcons}"/>
+                        <MenuItem Header="データベース更新" Command="{Binding MenuDatabaseUpdateDatabase}"/>
+                        <MenuItem Header="キャラアイコン更新" Command="{Binding MenuDatabaseUpdateUnitIcons}"/>
+                    </MenuItem>
+                    <MenuItem Header="ヘルプ">
+                        <MenuItem Header="バグ報告(GitHub Issues)" Command="{Binding MenuHelpReportBug}"/>
                     </MenuItem>
                 </Menu>
             </DockPanel>

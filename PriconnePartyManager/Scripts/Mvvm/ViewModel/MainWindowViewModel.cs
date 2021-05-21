@@ -32,9 +32,11 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         
         public ReactiveCommand OpenRoute { get; } = new ReactiveCommand();
 
-        public ReactiveCommand UpdateDatabase { get; } = new ReactiveCommand();
+        public ReactiveCommand MenuDatabaseUpdateDatabase { get; } = new ReactiveCommand();
         
-        public ReactiveCommand UpdateUnitIcons { get; } = new ReactiveCommand();
+        public ReactiveCommand MenuDatabaseUpdateUnitIcons { get; } = new ReactiveCommand();
+        
+        public ReactiveCommand MenuHelpReportBug { get; } = new ReactiveCommand();
         
         private Dictionary<int, int> m_DoublingCheckTable = new Dictionary<int, int>();
 
@@ -70,18 +72,23 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                 openRouteWindow.Show();
             });
 
-            UpdateDatabase.Subscribe(() =>
+            MenuDatabaseUpdateDatabase.Subscribe(() =>
             {
                 Database.I.UpdateDatabase();
             });
 
-            UpdateUnitIcons.Subscribe(() =>
+            MenuDatabaseUpdateUnitIcons.Subscribe(() =>
             {
                 var window = new DownloadUnitIcon();
                 if (!window.IsClosed)
                 {
                     window.Show();
                 }
+            });
+
+            MenuHelpReportBug.Subscribe(() =>
+            {
+                System.Diagnostics.Process.Start("explorer.exe", "https://github.com/hitsub/PriconnePartyManager/issues");
             });
 
             Database.I.OnAddUserParty += OnAddUserParty;
