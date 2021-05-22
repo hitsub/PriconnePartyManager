@@ -12,6 +12,8 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReactiveProperty<int> DownloadNum { get; }
         public ReactiveProperty<int> DownloadCompleteNum { get; }
 
+        private bool isFailed;
+
         public DownloadIconViewModel(Window window)
         {
             var downloader = new IconDownloader();
@@ -32,9 +34,20 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                 if (DownloadCompleteNum.Value >= DownloadNum.Value)
                 {
                     Database.I.RefreshUnitIcons();
-                    MessageBox.Show("アイコンのダウンロードが完了しました。\nこのソフトを再起動してください。");
+                    if (isFailed)
+                    {
+                        MessageBox.Show("一部アイコンのダウンロードに失敗しました。再度アイコン更新を行ってください。\nダウンロードに成功したアイコンを適用するにはこのソフトを再起動してください。");
+                    }
+                    else
+                    {
+                        MessageBox.Show("アイコンのダウンロードが完了しました。\nこのソフトを再起動してください。");
+                    }
                     window.Close();
                 }
+            };
+            downloader.OnFailedDonwload += () =>
+            {
+                isFailed = true;
             };
             
             DownloadNum.AddTo(m_Disposables);

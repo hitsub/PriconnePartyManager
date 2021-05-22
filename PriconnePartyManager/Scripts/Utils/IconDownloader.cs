@@ -21,6 +21,7 @@ namespace PriconnePartyManager.Scripts.Utils
         public int RequiredDownloadCount { get; }
 
         public event Action OnCompleteDownload;
+        public event Action OnFailedDonwload;
 
         public IconDownloader()
         {
@@ -72,6 +73,13 @@ namespace PriconnePartyManager.Scripts.Utils
             var decoder = new SimpleDecoder();
             var bytes = new byte[stream.Length];
             stream.Read(bytes, 0, bytes.Length);
+            if (bytes.Length == 0)
+            {
+                stream.Dispose();
+                File.Delete($"{DownloadLocation}{name}.webp");
+                OnFailedDonwload?.Invoke();
+                return;
+            }
             var bmp = decoder.DecodeFromBytes(bytes, bytes.Length);
             bmp.Save($"{DownloadLocation}{name}.png", ImageFormat.Png);
             bmp.Dispose();
