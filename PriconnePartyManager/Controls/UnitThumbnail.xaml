@@ -13,7 +13,10 @@
             </UserControl.Resources>
         <Grid>
             <StackPanel Margin="5,5,5,0" Visibility="{Binding IsVisibility.Value}">
-                <Image Source="{Binding Icon.Value}" Width="90" Opacity="{Binding IsSelect.Value, Converter={StaticResource SelectFlagToOpacity}}"/>
+                <Grid Width="90" Height="90" Opacity="{Binding IsSelect.Value, Converter={StaticResource SelectFlagToOpacity}}">
+                    <Image Source="{Binding Icon.Value}"/>
+                    <Image Source="/Resources/rank_default.png"/>
+                </Grid>
                 <TextBlock Text="{Binding Name.Value}" FontSize="11" Foreground="Black" HorizontalAlignment="Center" Width="90" Height="15"/>
             </StackPanel>
         </Grid>

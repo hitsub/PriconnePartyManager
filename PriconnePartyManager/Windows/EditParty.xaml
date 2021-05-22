@@ -14,6 +14,7 @@
         Title="パーティ編集" Height="550" Width="835">
     <Window.Resources>
         <xaml:RadioButtonConverter x:Key="EnumConverter" />
+        <xaml:RankToImageSourceConverter x:Key="RankToImageSourceConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -220,7 +221,10 @@
                                     <!-- サムネ中身 -->
                                     <StackPanel >
                                         <!-- サムネ -->
-                                        <Image Source="{Binding Icon.Value}" Width="60" Margin="5,5,5,5"/>
+                                        <Grid Width="60" Height="60" Margin="5,5,5,5">
+                                            <Image Source="{Binding Icon.Value}"/>
+                                            <Image Source="{Binding Rank.Value, Converter={StaticResource RankToImageSourceConverter}}"/>
+                                        </Grid>
                                         <!-- サポートチェック -->
                                         <CheckBox IsChecked="{Binding IsSupport.Value}" HorizontalAlignment="Center" Margin="0,0,0,5">
                                             <TextBlock Text="サポート" FontSize="11"></TextBlock>
