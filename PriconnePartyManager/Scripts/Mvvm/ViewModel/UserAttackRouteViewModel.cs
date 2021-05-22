@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows;
 using PriconnePartyManager.Scripts.Common;
 using PriconnePartyManager.Scripts.DataModel;
 using PriconnePartyManager.Scripts.Extensions;
@@ -21,7 +22,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         
         public string Id { get; private set; }
 
-        public UserAttackRouteViewModel(UserAttackRoute route, Action<UserAttackRoute> onOpenRoute)
+        public UserAttackRouteViewModel(UserAttackRoute route, Action<UserAttackRoute> onOpenRoute, Window window)
         {
             Id = route.Id;
             
@@ -31,7 +32,11 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             Comment = new ReactiveProperty<string>(route.Comment);
 
             OpenRoute = new ReactiveCommand();
-            OpenRoute.Subscribe(() => onOpenRoute?.Invoke(route));
+            OpenRoute.Subscribe(() =>
+            {
+                onOpenRoute?.Invoke(route);
+                window.Close();
+            });
             
             DeleteRoute = new ReactiveCommand();
             DeleteRoute.Subscribe(() => Database.I.RemoveAttackRoute(route));

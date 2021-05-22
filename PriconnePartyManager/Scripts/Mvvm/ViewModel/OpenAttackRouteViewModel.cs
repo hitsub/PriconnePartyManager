@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows;
 using PriconnePartyManager.Scripts.Common;
 using PriconnePartyManager.Scripts.DataModel;
 using PriconnePartyManager.Scripts.Extensions;
@@ -12,11 +13,11 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
     {
         public ReactiveCollection<UserAttackRouteViewModel> Routes { get; }
 
-        public OpenAttackRouteViewModel(Action<UserAttackRoute> onOpenRoute)
+        public OpenAttackRouteViewModel(Action<UserAttackRoute> onOpenRoute, Window window)
         {
             var routes = Database.I.UserAttackRoutes;
             Routes = new ReactiveCollection<UserAttackRouteViewModel>();
-            Routes.AddRange(routes.Select(x => new UserAttackRouteViewModel(x, onOpenRoute)));
+            Routes.AddRange(routes.Select(x => new UserAttackRouteViewModel(x, onOpenRoute, window)));
 
             Database.I.OnRemoveUserAttackRoute += OnDeleteAttackRoute;
         }

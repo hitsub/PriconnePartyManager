@@ -10,7 +10,7 @@ namespace PriconnePartyManager.Windows
         public OpenAttackRoute(Action<UserAttackRoute> onOpenAttackRoute)
         {
             InitializeComponent();
-            DataContext = new OpenAttackRouteViewModel(onOpenAttackRoute);
+            DataContext = new OpenAttackRouteViewModel(onOpenAttackRoute, this);
         }
     }
 }
