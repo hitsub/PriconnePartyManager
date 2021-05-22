@@ -10,6 +10,7 @@
         xmlns:vm="clr-namespace:PriconnePartyManager.Scripts.Mvvm.ViewModel"
         xmlns:enum="clr-namespace:PriconnePartyManager.Scripts.Enum"
         xmlns:controls="clr-namespace:PriconnePartyManager.Controls"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
         Title="パーティ編集" Height="550" Width="835">
     <Window.Resources>
@@ -252,6 +253,9 @@
                                             </ComboBox.ItemTemplate>
                                         </ComboBox>
                                     </StackPanel>
+                                    <Button HorizontalAlignment="Right" VerticalAlignment="Top" Height="15" Width="15" BorderThickness="0" Command="{Binding UnSelect}">
+                                        <fa:ImageAwesome Icon="Times"/>
+                                    </Button>
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>

@@ -49,7 +49,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             m_UnitsCollection = new ObservableCollection<Unit>(units);
             UnitList = m_UnitsCollection.ToReadOnlyReactiveCollection(x => new UnitViewModel(x));
             m_PartyUnitsCollection = new ObservableCollection<UserUnit>();
-            PartyUnits = m_PartyUnitsCollection.ToReadOnlyReactiveCollection(x => new UserUnitViewModel(x));
+            PartyUnits = m_PartyUnitsCollection.ToReadOnlyReactiveCollection(x => new UserUnitViewModel(x, () => UnselectUserUnit(x)));
 
             OnCancel.Subscribe(x => CloseWindow((Window)x));
             OnSubmit.Subscribe(x => SaveParty((Window)x));
@@ -114,6 +114,25 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
 
             IsFullParty.Value = selected.Length == 5;
             IsVisibleSelected.Value = selected.Length != 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void UnselectUserUnit(UserUnit userUnit)
+        {
+            var index = m_PartUnits.FindIndex(x => x.UnitId == userUnit.UnitId);
+            if (index < 0)
+            {
+                return;
+            }
+            m_PartUnits.RemoveAt(index);
+            m_PartyUnitsCollection.RemoveAt(index);
+            foreach (var unitViewModel in UnitList)
+            {
+                if (unitViewModel.Unit.Id == userUnit.UnitId)
+                {
+                    unitViewModel.SetSelect(false);
+                    return;
+                }
+            }
         }
 
         /// <summary>

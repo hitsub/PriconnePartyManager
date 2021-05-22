@@ -26,8 +26,10 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         
         /// <summary>同一編成内にサポキャラが複数いるか </summary>
         public ReactiveProperty<bool> IsDoublingSupport { get; }
+        
+        public ReactiveCommand UnSelect { get; }
 
-        public UserUnitViewModel(UserUnit userUnit)
+        public UserUnitViewModel(UserUnit userUnit, Action onUnSelect = null)
         {
             UserUnit = userUnit;
             Icon = new ReactiveProperty<BitmapImage>(UserUnit.Unit.Icon);
@@ -38,6 +40,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             Rarity = new ReactiveProperty<UnitRarity>(UserUnit.Rarity);
             IsDoubling = new ReactiveProperty<bool>(false);
             IsDoublingSupport = new ReactiveProperty<bool>(false);
+            UnSelect = new ReactiveCommand();
 
             IsSupport.Subscribe(x => UserUnit.IsSupport = x);
             Rank.Subscribe(x =>
@@ -46,6 +49,8 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                 UpdateRankString(x);
             });
             Rarity.Subscribe(x => UserUnit.Rarity = x);
+
+            UnSelect.Subscribe(() => onUnSelect?.Invoke());
             
             UpdateRankString(Rank.Value);
         }
