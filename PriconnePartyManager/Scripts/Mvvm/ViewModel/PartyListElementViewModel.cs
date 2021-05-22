@@ -67,7 +67,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             {
                 
                 var editWindow = new EditParty((UserParty)x);
-                editWindow.Show();
+                editWindow.ShowDialog();
             });
             OnDelete.Subscribe(() => DeleteParty(party));
 

@@ -59,12 +59,12 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             AddParty.Subscribe(() =>
             {
                 var editWindow = new EditParty();
-                editWindow.Show();
+                editWindow.ShowDialog();
             });
             ImportParty.Subscribe(() =>
             {
                 var importWindow = new ImportParty();
-                importWindow.Show();
+                importWindow.ShowDialog();
             });
 
             SaveRoute.Subscribe(SaveAttackRoute);
@@ -72,7 +72,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             OpenRoute.Subscribe(() =>
             {
                 var openRouteWindow = new OpenAttackRoute(OpenAttackRoute);
-                openRouteWindow.Show();
+                openRouteWindow.ShowDialog();
             });
 
             MenuDatabaseUpdateDatabase.Subscribe(() =>
@@ -85,7 +85,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                 var window = new DownloadUnitIcon();
                 if (!window.IsClosed)
                 {
-                    window.Show();
+                    window.ShowDialog();
                 }
             });
 
