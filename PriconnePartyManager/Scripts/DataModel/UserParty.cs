@@ -24,6 +24,10 @@ namespace PriconnePartyManager.Scripts.DataModel
         
         /// <summary> 推定ダメージ </summary>
         public string EstimateDamage { get; set; }
+        
+        public DateTime CreateTime { get; set; }
+        
+        public DateTime UpdateTime { get; set; }
 
         public UserParty()
         {
@@ -36,6 +40,8 @@ namespace PriconnePartyManager.Scripts.DataModel
             EstimateDamage = estimateDamage;
             Id = GenerateId();
             Tags = tags;
+            CreateTime = DateTime.Now;
+            UpdateTime = CreateTime;
         }
 
         public void UpdateData(IEnumerable<UserUnit> userUnits, string comment = null, string estimateDamage = null, int[] tags = null)
@@ -44,6 +50,7 @@ namespace PriconnePartyManager.Scripts.DataModel
             Comment = comment;
             EstimateDamage = estimateDamage;
             Tags = tags;
+            UpdateTime = DateTime.Now;
         }
 
         /// <summary>
