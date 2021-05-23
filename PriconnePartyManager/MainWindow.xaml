@@ -166,20 +166,90 @@
                                         </Grid.ColumnDefinitions>
                                         <Grid Column="0">
                                             <StackPanel Orientation="Vertical">
-                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
-                                                    <Border BorderThickness="2" CornerRadius="2" BorderBrush="CornflowerBlue"
-                                                        Visibility="{Binding EstimateDamage.Value, Converter={StaticResource IntToVisibilityConverter}}">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <Border BorderThickness="2" BorderBrush="CornflowerBlue" Background="CornflowerBlue">
-                                                                <TextBlock Text="推定ダメージ" Foreground="WhiteSmoke" Margin="2,2,2,2"/>
-                                                            </Border>
-                                                            <StackPanel Orientation="Horizontal" Margin="10,0,10,0" VerticalAlignment="Center">
-                                                                <TextBlock Text="{Binding EstimateDamage.Value}"/>
-                                                                <TextBlock Text="万" Margin="2,0,0,0"/>
+                                                <Grid>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <fa:ImageAwesome Icon="Tags" Margin="5,5,5,0" Height="14"/>
+                                                        <ListBox ItemsSource="{Binding Tags}"
+                                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                                                 VerticalContentAlignment="Center"
+                                                                 SelectionMode="Single"
+                                                                 Margin="0,5,0,0">
+                                                            <!-- ItemsControl.Templateの設定 -->
+                                                            <!-- 主に Border コントロール等で全体の枠線や背景色の設定を行う -->
+                                                            <ListBox.Template>
+                                                                <ControlTemplate TargetType="ItemsControl">
+                                                                    <Border>
+                                                                        <ScrollViewer>
+                                                                            <ItemsPresenter/>
+                                                                        </ScrollViewer>
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </ListBox.Template>
+
+                                                            <!-- ItemsControl.ItemsPanel -->
+                                                            <!-- コレクション項目をどのようにレイアウトするか(リストの並び方をどうするか)を決定する -->
+                                                            <ListBox.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <WrapPanel HorizontalAlignment="Left"/>
+                                                                </ItemsPanelTemplate>
+                                                            </ListBox.ItemsPanel>
+
+                                                            <!-- ItemsControl.ItemTemplateを設定 -->
+                                                            <!-- 各項目のデータ オブジェクトをどのように表示するかを決定する(リストの中身をつくる) -->
+                                                            <ListBox.ItemTemplate>
+                                                                <DataTemplate DataType="{x:Type vm:TagViewModel}">
+                                                                    <Grid Margin="3,3,3,3">
+                                                                        <Border CornerRadius="5" Background="{Binding BackgroundColor.Value}">
+                                                                            <TextBlock Text="{Binding Text.Value}" Foreground="{Binding TextColor.Value}" Margin="5,3,5,3"/>
+                                                                        </Border>
+                                                                    </Grid>
+                                                                </DataTemplate>
+                                                            </ListBox.ItemTemplate>
+
+
+                                                            <!-- ListBox.ItemContainerStyleを設定 -->
+                                                            <!--項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作を決定する-->
+                                                            <ListBox.ItemContainerStyle>
+                                                                <Style TargetType="ListBoxItem">
+                                                                    <Setter Property="Template">
+                                                                        <Setter.Value>
+                                                                            <ControlTemplate TargetType="{x:Type ContentControl}">
+                                                                                <Border Background="{TemplateBinding Background}">
+                                                                                    <ContentPresenter />
+                                                                                </Border>
+                                                                            </ControlTemplate>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Style>
+                                                            </ListBox.ItemContainerStyle>
+                                                        </ListBox>
+                                                        <StackPanel.Style>
+                                                            <Style TargetType="StackPanel">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding TagCount.Value}" Value="0">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </StackPanel.Style>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
+                                                        <Border BorderThickness="2" CornerRadius="2" BorderBrush="CornflowerBlue"
+                                                                Visibility="{Binding EstimateDamage.Value, Converter={StaticResource IntToVisibilityConverter}}">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Border BorderThickness="2" BorderBrush="CornflowerBlue" Background="CornflowerBlue">
+                                                                    <TextBlock Text="推定ダメージ" Foreground="WhiteSmoke" Margin="2,2,2,2"/>
+                                                                </Border>
+                                                                <StackPanel Orientation="Horizontal" Margin="10,0,10,0" VerticalAlignment="Center">
+                                                                    <TextBlock Text="{Binding EstimateDamage.Value}"/>
+                                                                    <TextBlock Text="万" Margin="2,0,0,0"/>
+                                                                </StackPanel>
                                                             </StackPanel>
-                                                        </StackPanel>
-                                                    </Border>
-                                                </StackPanel>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </Grid>
                                                 <StackPanel Orientation="Horizontal">
                                                     <ListBox ItemsSource="{Binding PartyUnits}"
                                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -455,20 +525,90 @@
                                         </Grid>
                                         <Grid Column="1">
                                             <StackPanel Orientation="Vertical">
-                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
-                                                    <Border BorderThickness="2" CornerRadius="2" BorderBrush="CornflowerBlue"
-                                                        Visibility="{Binding EstimateDamage.Value, Converter={StaticResource IntToVisibilityConverter}}">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <Border BorderThickness="2" BorderBrush="CornflowerBlue" Background="CornflowerBlue">
-                                                                <TextBlock Text="推定ダメージ" Foreground="WhiteSmoke" Margin="2,2,2,2"/>
-                                                            </Border>
-                                                            <StackPanel Orientation="Horizontal" Margin="10,0,10,0" VerticalAlignment="Center">
-                                                                <TextBlock Text="{Binding EstimateDamage.Value}"/>
-                                                                <TextBlock Text="万" Margin="2,0,0,0"/>
+                                                <Grid>
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <fa:ImageAwesome Icon="Tags" Margin="0,5,5,0" Height="14"/>
+                                                        <ListBox ItemsSource="{Binding Tags}"
+                                                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                                                 VerticalContentAlignment="Center"
+                                                                 SelectionMode="Single"
+                                                                 Margin="0,5,0,0">
+                                                            <!-- ItemsControl.Templateの設定 -->
+                                                            <!-- 主に Border コントロール等で全体の枠線や背景色の設定を行う -->
+                                                            <ListBox.Template>
+                                                                <ControlTemplate TargetType="ItemsControl">
+                                                                    <Border>
+                                                                        <ScrollViewer>
+                                                                            <ItemsPresenter/>
+                                                                        </ScrollViewer>
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </ListBox.Template>
+
+                                                            <!-- ItemsControl.ItemsPanel -->
+                                                            <!-- コレクション項目をどのようにレイアウトするか(リストの並び方をどうするか)を決定する -->
+                                                            <ListBox.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <WrapPanel HorizontalAlignment="Left"/>
+                                                                </ItemsPanelTemplate>
+                                                            </ListBox.ItemsPanel>
+
+                                                            <!-- ItemsControl.ItemTemplateを設定 -->
+                                                            <!-- 各項目のデータ オブジェクトをどのように表示するかを決定する(リストの中身をつくる) -->
+                                                            <ListBox.ItemTemplate>
+                                                                <DataTemplate DataType="{x:Type vm:TagViewModel}">
+                                                                    <Grid Margin="3,3,3,3">
+                                                                        <Border CornerRadius="5" Background="{Binding BackgroundColor.Value}">
+                                                                            <TextBlock Text="{Binding Text.Value}" Foreground="{Binding TextColor.Value}" Margin="5,3,5,3"/>
+                                                                        </Border>
+                                                                    </Grid>
+                                                                </DataTemplate>
+                                                            </ListBox.ItemTemplate>
+
+
+                                                            <!-- ListBox.ItemContainerStyleを設定 -->
+                                                            <!--項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作を決定する-->
+                                                            <ListBox.ItemContainerStyle>
+                                                                <Style TargetType="ListBoxItem">
+                                                                    <Setter Property="Template">
+                                                                        <Setter.Value>
+                                                                            <ControlTemplate TargetType="{x:Type ContentControl}">
+                                                                                <Border Background="{TemplateBinding Background}">
+                                                                                    <ContentPresenter />
+                                                                                </Border>
+                                                                            </ControlTemplate>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Style>
+                                                            </ListBox.ItemContainerStyle>
+                                                        </ListBox>
+                                                        <StackPanel.Style>
+                                                            <Style TargetType="StackPanel">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding TagCount.Value}" Value="0">
+                                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </StackPanel.Style>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
+                                                        <Border BorderThickness="2" CornerRadius="2" BorderBrush="CornflowerBlue"
+                                                                Visibility="{Binding EstimateDamage.Value, Converter={StaticResource IntToVisibilityConverter}}">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Border BorderThickness="2" BorderBrush="CornflowerBlue" Background="CornflowerBlue">
+                                                                    <TextBlock Text="推定ダメージ" Foreground="WhiteSmoke" Margin="2,2,2,2"/>
+                                                                </Border>
+                                                                <StackPanel Orientation="Horizontal" Margin="10,0,10,0" VerticalAlignment="Center">
+                                                                    <TextBlock Text="{Binding EstimateDamage.Value}"/>
+                                                                    <TextBlock Text="万" Margin="2,0,0,0"/>
+                                                                </StackPanel>
                                                             </StackPanel>
-                                                        </StackPanel>
-                                                    </Border>
-                                                </StackPanel>
+                                                        </Border>
+                                                    </StackPanel>
+                                                </Grid>
                                                 <StackPanel Orientation="Horizontal">
                                                     <ListBox ItemsSource="{Binding PartyUnits}"
                                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"

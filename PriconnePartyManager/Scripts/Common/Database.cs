@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows;
+using System.Windows.Media;
 using PriconnePartyManager.Scripts.DataModel;
 using PriconnePartyManager.Scripts.Sql;
 using PriconnePartyManager.Scripts.Sql.Model;
@@ -23,7 +24,9 @@ namespace PriconnePartyManager.Scripts.Common
         public List<UserParty> UserParties { get; private set; }
         
         public List<UserAttackRoute> UserAttackRoutes { get; private set; }
-
+        
+        public Tag[] Tags { get; private set; }
+            
         private int[] m_UnlockRarity6UnitIds;
         private int[] m_PlayableUnitIds;
         private UnitProfile[] m_UnitProfiles;
@@ -63,6 +66,7 @@ namespace PriconnePartyManager.Scripts.Common
             CreateUnits();
             LoadParties();
             LoadAttackRoutes();
+            LoadTags();
         }
 
         private void CreateUnits()
@@ -112,6 +116,11 @@ namespace PriconnePartyManager.Scripts.Common
             }
         }
 
+        private void LoadTags()
+        {
+            Tags = FileManager.I.LoadJsonFromFile<Tag[]>();
+        }
+        
         public void SaveParty(UserParty party)
         {
             if (UserParties.Contains(party))

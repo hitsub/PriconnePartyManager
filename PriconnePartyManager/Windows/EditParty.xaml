@@ -131,7 +131,8 @@
                 <!-- 各項目のデータ オブジェクトをどのように表示するかを決定する(リストの中身をつくる) -->
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type vm:UnitViewModel}">
-                        <controls:UnitThumbnail/> <!--Unit-->
+                        <controls:UnitThumbnail/>
+                        <!--Unit-->
                     </DataTemplate>
                 </ListBox.ItemTemplate>
 
@@ -174,6 +175,74 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid Row="0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <fa:ImageAwesome Icon="Tags" Margin="10,0,5,0" Height="14"/>
+                    <ListBox ItemsSource="{Binding Tags}"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                             VerticalContentAlignment="Center"
+                             SelectionMode="Single">
+                        <!-- ItemsControl.Templateの設定 -->
+                        <!-- 主に Border コントロール等で全体の枠線や背景色の設定を行う -->
+                        <ListBox.Template>
+                            <ControlTemplate TargetType="ItemsControl">
+                                <Border>
+                                    <ScrollViewer>
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </ControlTemplate>
+                        </ListBox.Template>
+
+                        <!-- ItemsControl.ItemsPanel -->
+                        <!-- コレクション項目をどのようにレイアウトするか(リストの並び方をどうするか)を決定する -->
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel HorizontalAlignment="Left"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+
+                        <!-- ItemsControl.ItemTemplateを設定 -->
+                        <!-- 各項目のデータ オブジェクトをどのように表示するかを決定する(リストの中身をつくる) -->
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:TagViewModel}">
+                                <Grid Margin="3,3,3,3">
+                                    <Border CornerRadius="5" Background="{Binding BackgroundColor.Value}">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Text.Value}" Foreground="{Binding TextColor.Value}" Margin="5,3,0,3"/>
+                                            <Button Command="{Binding OnRemove}" BorderThickness="0" Background="{Binding BackgroundColor.Value}" Margin="5,3,5,3">
+                                                <fa:ImageAwesome Icon="Times" Height="10" Foreground="{Binding TextColor.Value}"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+
+
+                        <!-- ListBox.ItemContainerStyleを設定 -->
+                        <!--項目にマウスが乗ったときに色を変える、項目が選択されたときに色を変える、といった動作を決定する-->
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ContentControl}">
+                                            <Border Background="{TemplateBinding Background}">
+                                                <ContentPresenter />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                    <Button BorderThickness="0" Command="{Binding OnAddTag}" VerticalContentAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:ImageAwesome Icon="PlusCircle" Margin="3,3,3,3" Height="14"/>
+                            <TextBlock Text="タグ追加" FontSize="13" Margin="3,0,3,0"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,5,10,0">
                     <Label Content="予想ダメージ" FontSize="11"/>
                     <TextBox Width="100" Height="19" Text="{Binding EstimateDamage.Value}"/>
@@ -253,7 +322,7 @@
                                             </ComboBox.ItemTemplate>
                                         </ComboBox>
                                     </StackPanel>
-                                    <Button HorizontalAlignment="Right" VerticalAlignment="Top" Height="15" Width="15" BorderThickness="0" Command="{Binding UnSelect}">
+                                    <Button HorizontalAlignment="Right" VerticalAlignment="Top" Height="15" Width="15" BorderThickness="0" Command="{Binding UnSelect}" Margin="0,5,5,5">
                                         <fa:ImageAwesome Icon="Times"/>
                                     </Button>
                                 </Grid>

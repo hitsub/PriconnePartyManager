@@ -16,7 +16,7 @@ namespace PriconnePartyManager.Scripts.Common
         {
             if (string.IsNullOrEmpty(path))
             {
-                path = string.Format(FileNameUserParties, typeof(T));
+                path = string.Format(FileNameUserParties, typeof(T).Name);
             }
             if (!File.Exists(path))
             {
@@ -55,7 +55,7 @@ namespace PriconnePartyManager.Scripts.Common
             var json = JsonSerializer.Serialize(data, options);
             if (string.IsNullOrEmpty(path))
             {
-                path = string.Format(FileNameUserParties, typeof(T));
+                path = string.Format(FileNameUserParties, typeof(T).Name);
             }
             if (!File.Exists(path))
             {

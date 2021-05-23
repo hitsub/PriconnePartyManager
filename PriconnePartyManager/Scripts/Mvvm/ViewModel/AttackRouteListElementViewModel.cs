@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using PriconnePartyManager.Scripts.Common;
 using PriconnePartyManager.Scripts.DataModel;
 using PriconnePartyManager.Scripts.Extension;
 using PriconnePartyManager.Scripts.Extensions;
@@ -14,6 +15,10 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
     {
 
         public ReactiveCollection<UserUnitViewModel> PartyUnits { get; }
+        
+        public ReactiveCollection<TagViewModel> Tags { get; }
+        
+        public ReactiveProperty<int> TagCount { get; } = new ReactiveProperty<int>();
         
         public ReactiveProperty<string> Comment { get; } = new ReactiveProperty<string>(string.Empty);
         
@@ -34,6 +39,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             Id = party.Id;
             Party = party;
             PartyUnits = new ReactiveCollection<UserUnitViewModel>();
+            Tags = new ReactiveCollection<TagViewModel>();
 
             IsExpandComment.Subscribe(x =>
             {
@@ -63,6 +69,12 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             Comment.Value = party.Comment?.GetFirstLine() ?? string.Empty;
             EstimateDamage.Value = party.EstimateDamage;
             IsShowExpandCommentButton.Value = party.Comment?.GetLineCount() <= 1 ? Visibility.Collapsed : Visibility.Visible;
+            var tags = party.Tags?.Select(x => Database.I.Tags.SingleOrDefault(db => db.Id == x));
+            if (tags?.Count() > 0)
+            {
+                Tags.AddRange(tags.Select(x => new TagViewModel(x)));
+                TagCount.Value += tags.Count();
+            }
         }
     }
 }

@@ -7,7 +7,9 @@ using System.Windows;
 using PriconnePartyManager.Scripts.Common;
 using PriconnePartyManager.Scripts.DataModel;
 using PriconnePartyManager.Scripts.Enum;
+using PriconnePartyManager.Scripts.Extensions;
 using PriconnePartyManager.Scripts.Mvvm.Common;
+using PriconnePartyManager.Windows;
 using Reactive.Bindings;
 
 namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
@@ -22,6 +24,8 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReactiveProperty<ListUnitType> ShowUnitType { get; } = new ReactiveProperty<ListUnitType>(ListUnitType.All);
         
         public ReadOnlyReactiveCollection<UserUnitViewModel> PartyUnits { get; private set; }
+        
+        public ReactiveCollection<TagViewModel> Tags { get; } = new ReactiveCollection<TagViewModel>();
 
         public ReactiveProperty<bool> IsFullParty { get; } = new ReactiveProperty<bool>();
         
@@ -32,8 +36,10 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         public ReactiveProperty<string> PartyComment { get; } = new ReactiveProperty<string>(string.Empty);
         
         public ReactiveProperty<string> EstimateDamage { get; } = new ReactiveProperty<string>(string.Empty);
-        
+
         public ReactiveCommand OnSearchTextChanged { get; set; } = new ReactiveCommand();
+        
+        public ReactiveCommand OnAddTag { get; } = new ReactiveCommand();
 
         public ReactiveCommand OnSubmit { get; } = new ReactiveCommand();
         public ReactiveCommand OnCancel { get; } = new ReactiveCommand();
@@ -80,6 +86,33 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                 IsVisibleSelected.Value = Visibility.Visible;
                 PartyComment.Value = party.Comment;
                 EstimateDamage.Value = party.EstimateDamage;
+                
+                Tags.Clear();
+                if (party.Tags?.Length > 0)
+                {
+                    var vms = party.Tags
+                        .Select(x => Database.I.Tags.SingleOrDefault(db => db.Id == x))
+                        .Select(x => new TagViewModel(x, OnRemoveTag));
+                    Tags.AddRange(vms);
+                }
+
+                OnAddTag.Subscribe(() =>
+                {
+                    var window = new AddTagWindow(tag =>
+                    {
+                        Tags.Add(new TagViewModel(tag, OnRemoveTag));
+                    });
+                    window.ShowDialog();
+                });
+            }
+        }
+
+        private void OnRemoveTag(Tag tag)
+        {
+            var index = Tags.ToList().FindIndex(x => x.Tag.Id == tag.Id);
+            if (index >= 0)
+            {
+                Tags.RemoveAt(index);
             }
         }
 
@@ -190,11 +223,11 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         {
             if (m_Party == null)
             {
-                m_Party = new UserParty(m_PartUnits, PartyComment.Value, EstimateDamage.Value);
+                m_Party = new UserParty(m_PartUnits, PartyComment.Value, EstimateDamage.Value, Tags.Select(x => x.Tag.Id).ToArray());
             }
             else
             {
-                m_Party.UpdateData(m_PartUnits, PartyComment.Value, EstimateDamage.Value);
+                m_Party.UpdateData(m_PartUnits, PartyComment.Value, EstimateDamage.Value, Tags.Select(x => x.Tag.Id).ToArray());
             }
             Database.I.SaveParty(m_Party);
             window.Close();

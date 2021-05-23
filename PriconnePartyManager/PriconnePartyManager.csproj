@@ -93,6 +93,10 @@
       <Generator></Generator>
       <XamlRuntime>Wpf</XamlRuntime>
     </Page>
+    <Page Update="Windows\AddTagWindow.xaml">
+      <Generator></Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>
@@ -104,6 +108,9 @@
     </Compile>
     <Compile Update="Windows\DownloadUnitIcon.xaml.cs">
       <DependentUpon>DownloadUnitIcon.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Windows\AddTagWindow.xaml.cs">
+      <DependentUpon>AddTagWindow.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 

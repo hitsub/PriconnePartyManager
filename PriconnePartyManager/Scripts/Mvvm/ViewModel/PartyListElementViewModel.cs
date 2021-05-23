@@ -24,6 +24,10 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
         
         public ReactiveCollection<UserUnitViewModel> PartyUnits { get; private set; }
         
+        public ReactiveCollection<TagViewModel> Tags { get; }
+        
+        public ReactiveProperty<int> TagCount { get; } = new ReactiveProperty<int>();
+        
         public ReactiveProperty<string> Comment { get; } = new ReactiveProperty<string>(string.Empty);
         
         public ReactiveProperty<bool> IsExpandComment { get; } = new ReactiveProperty<bool>(false);
@@ -50,6 +54,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             Party.Value = party;
             
             PartyUnits = new ReactiveCollection<UserUnitViewModel>();
+            Tags = new ReactiveCollection<TagViewModel>();
 
             IsExpandComment.Subscribe(x =>
             {
@@ -94,6 +99,14 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             Comment.Value = party.Comment?.GetFirstLine() ?? string.Empty;
 
             EstimateDamage.Value = party.EstimateDamage;
+            
+            Tags.Clear();
+            var tags = party.Tags?.Select(x => Database.I.Tags.SingleOrDefault(db => db.Id == x));
+            if (tags?.Count() > 0)
+            {
+                Tags.AddRange(tags.Select(x => new TagViewModel(x)));
+                TagCount.Value += tags.Count();
+            }
         }
 
         private void DeleteParty(UserParty party)

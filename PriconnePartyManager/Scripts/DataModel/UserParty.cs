@@ -20,7 +20,7 @@ namespace PriconnePartyManager.Scripts.DataModel
         public string Comment { get; set; }
         
         /// <summary> ユーザーが任意につけれるタグ </summary>
-        public string[] Tags { get; set; }
+        public int[] Tags { get; set; }
         
         /// <summary> 推定ダメージ </summary>
         public string EstimateDamage { get; set; }
@@ -29,19 +29,21 @@ namespace PriconnePartyManager.Scripts.DataModel
         {
         }
 
-        public UserParty(IEnumerable<UserUnit> userUnits, string comment = null, string estimateDamage = null)
+        public UserParty(IEnumerable<UserUnit> userUnits, string comment = null, string estimateDamage = null, int[] tags = null)
         {
             UserUnits = userUnits.Select(x => new UserUnit(x));
             Comment = comment;
             EstimateDamage = estimateDamage;
             Id = GenerateId();
+            Tags = tags;
         }
 
-        public void UpdateData(IEnumerable<UserUnit> userUnits, string comment = null, string estimateDamage = null)
+        public void UpdateData(IEnumerable<UserUnit> userUnits, string comment = null, string estimateDamage = null, int[] tags = null)
         {
             UserUnits = userUnits;
             Comment = comment;
             EstimateDamage = estimateDamage;
+            Tags = tags;
         }
 
         /// <summary>
