@@ -353,7 +353,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
-                        <TextBox Text="{Binding PartyComment.Value}" Margin="10,5,10,0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Visibility="{Binding IsVisibleSelected.Value}"  FontFamily="Menlo">
+                        <TextBox Text="{Binding PartyComment.Value}" Margin="10,5,10,0" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Visibility="{Binding IsVisibleSelected.Value}"  FontFamily="Menlo" Height="90">
                             <TextBox.Style>
                                 <Style TargetType="TextBox" xmlns:sys="clr-namespace:System;assembly=mscorlib">
                                     <Style.Resources>
