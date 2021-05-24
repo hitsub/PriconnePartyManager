@@ -17,7 +17,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
     {
         public ReactiveCollection<PartyListElementViewModel> UserParties { get; private set; }
         
-        public ReactiveCollection<AttackRouteListElementViewModel> AttackParties { get; }
+        public ReactiveCollection<AttackRouteListElementViewModel> AttackParties { get; private set; }
         
         public ReactiveProperty<string> AttackRouteComment { get; }
         
@@ -186,7 +186,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             {
                 m_CurrentAttackRoute.Save(AttackParties.Select(x => x.Party), AttackRouteComment.Value);
             }
-            Database.I.SaveAttackRoute(m_CurrentAttackRoute);
+            Database.I.SaveAttackRoute(new UserAttackRoute(m_CurrentAttackRoute));
             MessageBox.Show("保存しました");
         }
 

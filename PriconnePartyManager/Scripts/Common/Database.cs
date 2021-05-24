@@ -166,9 +166,9 @@ namespace PriconnePartyManager.Scripts.Common
 
         public void SaveAttackRoute(UserAttackRoute route)
         {
-            if (UserAttackRoutes.Contains(route))
+            var index = UserAttackRoutes.FindIndex(x => x.Id == route.Id);
+            if (index >= 0)
             {
-                var index = UserAttackRoutes.FindIndex(x => x.Id == route.Id);
                 UserAttackRoutes[index] = route;
                 OnChangeUserAttackRoute?.Invoke(route);
                 FileManager.I.SaveJson(UserAttackRoutes.ToArray());

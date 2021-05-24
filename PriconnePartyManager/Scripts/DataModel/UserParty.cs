@@ -33,6 +33,17 @@ namespace PriconnePartyManager.Scripts.DataModel
         {
         }
 
+        public UserParty(UserParty party)
+        {
+            Id = party.Id;
+            UserUnits = party.UserUnits.Select(x => new UserUnit(x));
+            Comment = party.Comment;
+            Tags = party.Tags?.ToArray();
+            EstimateDamage = party.EstimateDamage;
+            CreateTime = party.CreateTime;
+            UpdateTime = party.UpdateTime;
+        }
+
         public UserParty(IEnumerable<UserUnit> userUnits, string comment = null, string estimateDamage = null, int[] tags = null)
         {
             UserUnits = userUnits.Select(x => new UserUnit(x));
