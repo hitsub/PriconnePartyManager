@@ -64,6 +64,15 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
 
             ShowUnitType.Subscribe(OnChangeShowUnitType);
             OnChangeSelected.Subscribe(OnChangeSelectedUnit);
+            
+            OnAddTag.Subscribe(() =>
+            {
+                var window = new AddTagWindow(tag =>
+                {
+                    Tags.Add(new TagViewModel(tag, OnRemoveTag));
+                });
+                window.ShowDialog();
+            });
 
             if (party != null)
             {
@@ -95,15 +104,6 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                         .Select(x => new TagViewModel(x, OnRemoveTag));
                     Tags.AddRange(vms);
                 }
-
-                OnAddTag.Subscribe(() =>
-                {
-                    var window = new AddTagWindow(tag =>
-                    {
-                        Tags.Add(new TagViewModel(tag, OnRemoveTag));
-                    });
-                    window.ShowDialog();
-                });
             }
         }
 
