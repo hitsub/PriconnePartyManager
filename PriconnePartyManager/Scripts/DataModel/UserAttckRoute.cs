@@ -25,9 +25,18 @@ namespace PriconnePartyManager.Scripts.DataModel
         {
         }
 
+        public UserAttackRoute(UserAttackRoute route)
+        {
+            Id = route.Id;
+            RouteParties = route.RouteParties.Select(x => new UserParty(x));
+            Comment = route.Comment;
+            CreateTime = route.CreateTime;
+            UpdateTime = route.UpdateTime;
+        }
+
         public UserAttackRoute(IEnumerable<UserParty> parties, string comment)
         {
-            RouteParties = parties;
+            RouteParties = parties.Select(x => new UserParty(x));
             Comment = comment;
             CreateTime = DateTime.Now;
             UpdateTime = CreateTime;
@@ -39,7 +48,7 @@ namespace PriconnePartyManager.Scripts.DataModel
         /// </summary>
         public void Save(IEnumerable<UserParty> parties, string comment)
         {
-            RouteParties = parties;
+            RouteParties = parties.Select(x => new UserParty(x));
             Comment = comment;
             UpdateTime = DateTime.Now;
         }
