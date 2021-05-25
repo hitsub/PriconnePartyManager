@@ -39,7 +39,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             };
 
             var instance = JsonSerializer.Deserialize<UserParty>(Json.Value, options);
-            Database.I.AddParty(instance);
+            Database.I.AddParty(new UserParty(instance.UserUnits, instance.Comment, instance.EstimateDamage, instance.Tags));
             x.Close();
         }
 
