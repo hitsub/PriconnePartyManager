@@ -117,7 +117,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             UserParties.Add(new PartyListElementViewModel(party, OnSelectAttackRoute));
             var parties = UserParties.ToArray();
             UserParties.Clear();
-            UserParties.AddRange(parties.OrderByDescending(x => x.Party.Value.UpdateTime));
+            UserParties.AddRange(parties.OrderByDescending(x => x.Party.Value.CreateTime));
         }
 
         private void OnChangeUserParty(UserParty party)
@@ -128,7 +128,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
                 UserParties[userPartyIndex].UpdateParty(party);;
                 var parties = UserParties.ToArray();
                 UserParties.Clear();
-                UserParties.AddRange(parties.OrderByDescending(x => x.Party.Value.UpdateTime));
+                UserParties.AddRange(parties.OrderByDescending(x => x.Party.Value.CreateTime));
             }
             
             var attackRouteIndex = AttackParties.ToList().FindIndex(x => x.Id == party.Id);

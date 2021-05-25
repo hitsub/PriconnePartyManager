@@ -99,7 +99,7 @@ namespace PriconnePartyManager.Scripts.Common
         private void LoadParties()
         {
             UserParties = new List<UserParty>();
-            var exists = FileManager.I.LoadJsonFromFile<UserParty[]>().OrderByDescending(x => x.UpdateTime).ToArray();
+            var exists = FileManager.I.LoadJsonFromFile<UserParty[]>().OrderByDescending(x => x.CreateTime).ToArray();
             if (exists?.Length > 0)
             {
                 UserParties.AddRange(exists);

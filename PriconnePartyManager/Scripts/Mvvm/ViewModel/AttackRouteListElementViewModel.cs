@@ -69,6 +69,7 @@ namespace PriconnePartyManager.Scripts.Mvvm.ViewModel
             Comment.Value = party.Comment?.GetFirstLine() ?? string.Empty;
             EstimateDamage.Value = party.EstimateDamage;
             IsShowExpandCommentButton.Value = party.Comment?.GetLineCount() <= 1 ? Visibility.Collapsed : Visibility.Visible;
+            Tags.Clear();
             var tags = party.Tags?.Select(x => Database.I.Tags.SingleOrDefault(db => db.Id == x));
             if (tags?.Count() > 0)
             {
